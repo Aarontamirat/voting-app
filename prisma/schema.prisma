@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// generator client {
+//   provider = "prisma-client-js"
+//   output   = "../app/generated/prisma"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Shareholder {
+  // NOTE: id is manually-entered (string) per your requirement
+  id         String      @id
+  name       String
+  nameAm     String?
+  phone      String?     
+  address    String?
+  shareValue Decimal     @db.Decimal(30, 6) // supports fractional share amounts
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  attendances Attendance[]
+  // representations where this shareholder is represented (join table)
+  representedIn Representation[]
+  shareholderID Representative[]
+  nomineeID Nominee[]
+
+  @@index([name])
+  @@index([phone])
+}
+
+model Meeting {
+  // You said meetings will have their own ids; allow manual string ID
+  id           String       @id @default(uuid())
+  title        String
+  date         DateTime
+  location     String?
+  quorumPct    Float?       // quorum percent (e.g. 25.0 for 25%)
+  status       MeetingStatus @default(DRAFT)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  attendances  Attendance[]
+  nominees     Nominee[]
+  meeting      Representation[]
+  meetings     Vote[]
+}
+
+enum MeetingStatus {
+  DRAFT
+  OPEN
+  CLOSED
+  VOTINGOPEN
+}
+
+model Representative {
+  id          String    @id @default(uuid())
+  name        String
+  phone       String?
+  // if this representative *is* a shareholder, link (optional)
+  shareholderId String? 
+  shareholder   Shareholder? @relation(fields: [shareholderId], references: [id])
+
+  createdAt   DateTime  @default(now())
+
+  representations Representation[]
+  representedBy Attendance[]
+}
+
+model Representation {
+  // Represents that `representative` represents `shareholder` for `meeting`
+  id               Int           @id @default(autoincrement())
+  meetingId        String
+  representativeId String
+  shareholderId    String
+
+  meeting        Meeting        @relation(fields: [meetingId], references: [id])
+  representative Representative @relation(fields: [representativeId], references: [id])
+  shareholder    Shareholder    @relation(fields: [shareholderId], references: [id])
+
+  @@unique([meetingId, representativeId, shareholderId])
+}
+
+model Attendance {
+  id                String   @id @default(cuid())
+  meetingId         String
+  shareholderId     String
+  representedById   String?    // another shareholder
+  representativeName String?   // external rep
+  createdAt         DateTime @default(now())
+
+  meeting       Meeting    @relation(fields: [meetingId], references: [id])
+  shareholder   Shareholder @relation(fields: [shareholderId], references: [id])
+  representedBy Representative? @relation(fields: [representedById], references: [id])
+
+  @@unique([meetingId, shareholderId]) // only one attendance row per shareholder per meeting
+}
+
+model Nominee {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  meetingId   String
+  shareholderId     String
+  createdAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  shareholder   Shareholder @relation(fields: [shareholderId], references: [id])
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  votes   Vote[]
+}
+
+model Vote {
+id            String   @id @default(cuid())
+  meetingId     String
+  nomineeId     String
+  voterId       String     // shareholderId or representativeId
+  weight        Float
+  createdAt     DateTime @default(now())
+
+  meetings      Meeting   @relation(fields: [meetingId], references: [id])
+  nominee      Nominee   @relation(fields: [nomineeId], references: [id])
+
+  @@unique([meetingId, nomineeId, voterId]) // a shareholder can vote at most once per nominee per meeting
+}

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `meeting` MODIFY `status` ENUM('DRAFT', 'OPEN', 'CLOSED', 'VOTINGOPEN') NOT NULL DEFAULT 'DRAFT';
