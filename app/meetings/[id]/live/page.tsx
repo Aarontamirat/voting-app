@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {

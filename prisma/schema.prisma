@@ -27,6 +27,7 @@ model Shareholder {
   // NOTE: id is manually-entered (string) per your requirement
   id         String      @id
   name       String
+  nameAm     String?
   phone      String?     
   address    String?
   shareValue Decimal     @db.Decimal(30, 6) // supports fractional share amounts

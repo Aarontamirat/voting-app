@@ -1,4 +1,3 @@
-// Reusable Add/Edit Shareholder Modal - Shadcn + Tailwind + Next.js 15
 
 'use client';
 
@@ -19,6 +18,7 @@ interface ShareholderModalProps {
 export default function ShareholderModal({ isOpen, onClose, mode, initialData, onSuccess }: ShareholderModalProps) {
   const [id, setId] = useState('');
   const [name, setName] = useState('');
+  const [nameAm, setNameAm] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [shareValue, setShareValue] = useState('');
@@ -28,12 +28,14 @@ export default function ShareholderModal({ isOpen, onClose, mode, initialData, o
     if (mode === 'edit' && initialData) {
       setId(initialData.id);
       setName(initialData.name);
+      setNameAm(initialData.nameAm);
       setPhone(initialData.phone || '');
       setAddress(initialData.address || '');
       setShareValue(initialData.shareValue);
     } else {
       setId('');
       setName('');
+      setNameAm('');
       setPhone('');
       setAddress('');
       setShareValue('');
@@ -49,6 +51,10 @@ export default function ShareholderModal({ isOpen, onClose, mode, initialData, o
       toast.error('Name is required');
       return;
     }
+    if (!nameAm.trim()) {
+      toast.error('Amharic Name is required');
+      return;
+    }
     if (!shareValue.trim() || isNaN(Number(shareValue))) {
       toast.error('Valid Share Value is required');
       return;
@@ -62,7 +68,7 @@ export default function ShareholderModal({ isOpen, onClose, mode, initialData, o
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, name, phone, address, shareValue }),
+        body: JSON.stringify({ id, name, nameAm, phone, address, shareValue }),
       });
 
       const data = await res.json();
@@ -96,6 +102,11 @@ export default function ShareholderModal({ isOpen, onClose, mode, initialData, o
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
             <Input value={name} onChange={e => setName(e.target.value)} />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Amharic Name</label>
+            <Input value={nameAm} onChange={e => setNameAm(e.target.value)} />
           </div>
 
           <div>

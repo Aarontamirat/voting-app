@@ -7,6 +7,7 @@ import { z } from 'zod';
 const CreateShareholderSchema = z.object({
 id: z.string().min(1),
 name: z.string().min(1),
+nameAm: z.string().min(1),
 phone: z.string().optional().nullable(),
 address: z.string().optional().nullable(),
 shareValue: z.union([z.string(), z.number()]),
@@ -24,6 +25,7 @@ const where: any = {};
 if (q) {
 where.OR = [
 { name: { contains: q } },
+{ nameAm: { contains: q } },
 { phone: { contains: q } },
 { id: { contains: q } },
 ];
@@ -70,6 +72,7 @@ const created = await prisma.shareholder.create({
 data: {
 id: parsed.id,
 name: parsed.name,
+nameAm: parsed.nameAm,
 phone: parsed.phone ?? null,
 address: parsed.address ?? null,
 shareValue: parsed.shareValue.toString(),

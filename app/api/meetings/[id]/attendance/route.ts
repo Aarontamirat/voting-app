@@ -43,6 +43,7 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       id: a.id,
       shareholderId: a.shareholderId,
       shareholderName: a.shareholder.name,
+      shareholderNameAm: a.shareholder.nameAm,
       shareValue: a.shareholder.shareValue.toString(),
       representedById: a.representedById,
       representedByName: a.representedBy?.name ?? a.representativeName ?? null,

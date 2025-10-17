@@ -62,10 +62,10 @@ export default function LiveAttendancePage() {
         {/* HEADER */}
         <div>
           <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent drop-shadow-sm">
-            የአቴንዳንስ መከታተያ (ቀጥታ)
+            Live Attendance Dashboard
           </h1>
           <p className="text-gray-500 mt-2 uppercase tracking-widest text-sm">
-            የአሁን ሰዓት ባለአክሲዮኖች ተሳትፎ ዕይታ
+            Real-time Shareholder Presence Visualization
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function LiveAttendancePage() {
               quorumMet ? 'text-green-600' : 'text-sky-600'
             }`}
           >
-            {quorumMet ? 'ምልአተ ጉባኤ ሞልቷል — ስብሰባው ለመካሄድ ዝግጁ ነው' : 'ተጨማሪ ተሳታፊዎችን በመጠበቅ ላይ ...'}
+            {quorumMet ? 'Quorum Met — Meeting Ready' : 'Awaiting Additional Attendees'}
           </motion.p>
         </div>
 
@@ -127,10 +127,10 @@ export default function LiveAttendancePage() {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
         >
           {[
-            { label: 'አጠቃላይ ሼሮች', value: totalShares },
-            { label: 'አጠቃላይ ባለአክስዮኖች', value: totalShareholders },
-            { label: 'ተሳታፊዎች', value: attendedCount },
-            { label: 'የተሳታፊዎች አክስዮን ብዛት', value: attendedShares },
+            { label: 'Total Shares', value: totalShares },
+            { label: 'Total Shareholders', value: totalShareholders },
+            { label: 'Attendees', value: attendedCount },
+            { label: 'Attended Shares', value: attendedShares },
           ].map((item, idx) => (
             <motion.div
               key={idx}
@@ -154,7 +154,7 @@ export default function LiveAttendancePage() {
         {/* ATTENDEE LIST */}
         <div className="mt-12 bg-white/70 border border-blue-100 rounded-2xl shadow-md p-8 max-h-[60vh] overflow-y-auto">
           <h2 className="text-xl font-semibold text-blue-700 mb-6">
-            የተሳታፊዎች ዝርዝር (ቀጥታ)
+            Attendee List (Live)
           </h2>
           <AnimatePresence>
             {attendance.map((a: any, i: number) => (
@@ -167,10 +167,10 @@ export default function LiveAttendancePage() {
                 className="flex justify-between items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-sky-50 rounded-lg border border-blue-100 mb-2"
               >
                 <span className="text-sm font-medium text-gray-700">
-                  {a.shareholderNameAm}
+                  {a.shareholderName}
                 </span>
                 <span className="text-sm text-sky-600 font-mono">
-                  {Number(a.shareValue).toLocaleString()} ሼሮች
+                  {Number(a.shareValue).toLocaleString()} shares
                 </span>
               </motion.div>
             ))}

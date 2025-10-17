@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 const UpdateShareholderSchema = z.object({
 name: z.string().min(1).optional(),
+nameAm: z.string().min(1).optional(),
 phone: z.string().optional().nullable(),
 address: z.string().optional().nullable(),
 shareValue: z.union([z.string(), z.number()]).optional(),
@@ -38,6 +39,7 @@ return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
 
 const data: any = {};
 if (parsed.name !== undefined) data.name = parsed.name;
+if (parsed.nameAm !== undefined) data.nameAm = parsed.nameAm;
 if (parsed.phone !== undefined) data.phone = parsed.phone;
 if (parsed.address !== undefined) data.address = parsed.address;
 if (parsed.shareValue !== undefined) data.shareValue = parsed.shareValue.toString();

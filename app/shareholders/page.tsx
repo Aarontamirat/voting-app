@@ -77,6 +77,7 @@ export default function ShareholdersPage() {
                             <TableRow>
                                 <TableHead>ID</TableHead>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Amharic Name</TableHead>
                                 <TableHead>Phone</TableHead>
                                 <TableHead>Address</TableHead>
                                 <TableHead>Share Value</TableHead>
@@ -90,6 +91,7 @@ export default function ShareholdersPage() {
                                 <TableRow key={s.id} className="hover:bg-gray-50">
                                     <TableCell>{s.id}</TableCell>
                                     <TableCell>{s.name}</TableCell>
+                                    <TableCell>{s.nameAm || '-'}</TableCell>
                                     <TableCell>{s.phone || '-'}</TableCell>
                                     <TableCell>{s.address || '-'}</TableCell>
                                     <TableCell>{s.shareValue}</TableCell>
