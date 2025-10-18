@@ -114,6 +114,7 @@ model Attendance {
 model Nominee {
   id          String   @id @default(cuid())
   name        String
+  nameAm      String?
   description String?
   meetingId   String
   shareholderId     String

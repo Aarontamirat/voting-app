@@ -161,6 +161,7 @@ export async function GET(req: Request, context: { params: { id: string } }) {
       return {
         nomineeId: n.id,
         name: n.name,
+        nameAm: n.nameAm,
         description: n.description,
         totalWeight: Number(g?._sum.weight ?? 0),
       };

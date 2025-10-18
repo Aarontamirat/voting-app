@@ -51,6 +51,7 @@ export default function NomineeModal({ isOpen, onClose, meeting, onSuccess }: No
         body: JSON.stringify({
           shareholderId: shareholder.id,
           name: shareholder.name,
+          nameAm: shareholder.nameAm,
           description: newDescription || '',
         }),
       });
@@ -107,7 +108,7 @@ export default function NomineeModal({ isOpen, onClose, meeting, onSuccess }: No
               <SelectContent className="">
                 {shareholders.map((s) => (
                   <SelectItem key={s.id} value={s.id} className="whitespace-nowrap">
-                    {s.name} ({Number(s.shareValue)} shares)
+                    {s.name} ({s.nameAm} {Number(s.shareValue)} shares)
                   </SelectItem>
                 ))}
               </SelectContent>

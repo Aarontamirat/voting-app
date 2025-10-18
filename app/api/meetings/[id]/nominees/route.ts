@@ -65,7 +65,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
     // 3. Prevent duplicate nomination for the same shareholder in same meeting
     const existing = await prisma.nominee.findFirst({
-      where: { meetingId: id, name: shareholder.name },
+      where: { meetingId: id, shareholderId: shareholder.id },
     });
 
     //const existingID = await prisma.nominee.findFirst({
@@ -85,6 +85,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
         description: parsed.description ?? null,
         meetingId: id,
         shareholderId: shareholder.id,
+        nameAm: shareholder.nameAm ?? null,
       },
     });
 

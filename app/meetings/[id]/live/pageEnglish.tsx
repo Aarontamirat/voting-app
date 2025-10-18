@@ -27,21 +27,7 @@ export default function LiveVotingPresentation() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // colors chosen for contrast and accessibility
-  const colors = [
-    '#0B63E5', 
-    '#059669', 
-    '#F59E0B', 
-    '#DC2626', 
-    '#7C3AED', 
-    '#DB2777', 
-    '#0891B2', 
-    '#3B82F6', 
-    '#EF4444', 
-    '#22C55E', 
-    '#8B5CF6', 
-    '#F87171', 
-    '#10B981',
-  ];
+  const colors = ['#0B63E5', '#059669', '#F59E0B', '#DC2626', '#7C3AED', '#DB2777', '#0891B2'];
 
   // Fetching live results and auto-refresh
   useEffect(() => {
@@ -119,13 +105,13 @@ export default function LiveVotingPresentation() {
     <div ref={containerRef} className="min-h-screen bg-black/90 text-white p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="space-y-0">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight">🗳 ምርጫ (ቀጥታ)</h1>
-          <p className="text-xl md:text-2xl text-gray-200/90">{meetingStatus === 'CLOSED' ? 'ምርጫ ዝግ ነው' : meetingStatus === 'VOTINGOPEN' ? 'ምርጫ — በመካሄድ ላይ ነው' : 'ይህ ስብሰባ ለምርጫ ክፍት አይደለም'}</p>
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight">🗳 Live Voting</h1>
+          <p className="text-xl md:text-2xl text-gray-200/90">{meetingStatus === 'CLOSED' ? 'Voting Closed' : meetingStatus === 'VOTINGOPEN' ? 'Voting — In Progress' : 'Meeting Not Open for Voting'}</p>
         </div>
 
         <div className="flex flex-col items-end gap-3">
           <div className="text-right">
-            <div className="text-sm text-gray-300">አጠቃላይ ያሉ አክስዮኖች</div>
+            <div className="text-sm text-gray-300">Total Shares Counted</div>
             <div className="text-3xl md:text-4xl font-bold">{totals.totalWeight.toLocaleString()}</div>
           </div>
 
@@ -135,7 +121,7 @@ export default function LiveVotingPresentation() {
               className="px-4 py-2 rounded-lg bg-white text-black font-semibold shadow-md"
               aria-pressed={isFullScreen}
             >
-              {isFullScreen ? 'ከሙሉ መስኮት ውጣ (F)' : 'ሙሉ መስኮት (F)'}
+              {isFullScreen ? 'Exit Fullscreen (F)' : 'Fullscreen (F)'}
             </button>
             <button
               onClick={() => {
@@ -144,7 +130,7 @@ export default function LiveVotingPresentation() {
               }}
               className="px-4 py-2 rounded-lg bg-gray-200/10 border border-gray-300/20 text-gray-100"
             >
-              ማደስ
+              Refresh
             </button>
           </div>
         </div>
@@ -153,9 +139,9 @@ export default function LiveVotingPresentation() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
         {/* Left: Big horizontal bar chart (large, readable) */}
         <div className="md:col-span-2 bg-white/5 rounded-2xl p-4" style={{ minHeight: 420 }}>
-          <h2 className="text-2xl font-semibold mb-2">ውጤቶች</h2>
+          <h2 className="text-2xl font-semibold mb-2">Results</h2>
           {results.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-300">እስካሁን የተመረጠ የለም</div>
+            <div className="flex items-center justify-center h-full text-gray-300">No votes yet</div>
           ) : (
             <div className="h-[600px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -165,122 +151,70 @@ export default function LiveVotingPresentation() {
                   margin={{ top: 10, right: 40, left: 20, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.08} />
-                  <XAxis
-                    type="number"
-                    tickLine={false}
-                    axisLine={false}
-                    stroke="#cbd5e1"
-                  />
-                  <YAxis
-                    dataKey="nameAm"
-                    type="category"
-                    width={180}
-                    tickLine={false}
-                    axisLine={false}
-                    stroke="#cbd5e1"
-                  />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(255,255,255,0.06)' }}
-                    contentStyle={{ background: '#0b1220', borderRadius: 8 }}
-                  />
-
-                  {/* Add smooth animated transition on bar updates */}
-                  <Bar
-                    dataKey="totalWeight"
-                    barSize={28}
-                    radius={[8, 8, 8, 8]}
-                    animationDuration={900}
-                    animationEasing="ease-out"
-                    isAnimationActive={true}
-                  >
+                  <XAxis type="number" tickLine={false} axisLine={false} stroke="#cbd5e1" />
+                  <YAxis dataKey="name" type="category" width={180} tickLine={false} axisLine={false} stroke="#cbd5e1" />
+                  <Tooltip cursor={{ fill: 'rgba(255,255,255,0.06)' }} contentStyle={{ background: '#0b1220', borderRadius: 8 }} />
+                  <Bar dataKey="totalWeight" barSize={28} radius={[8, 8, 8, 8]} isAnimationActive={false}>
                     {results.map((r, i) => (
-                      <Cell key={`cell-${r.nomineeId || i}`} fill={colors[i % colors.length]} />
+                      <Cell key={`cell-${i}`} fill={colors[i % colors.length]} />
                     ))}
                     <LabelList
                       dataKey="totalWeight"
                       position="right"
-                      formatter={(val: any) =>
-                        val !== null && val !== undefined ? val.toLocaleString() : ''
-                      }
+                      formatter={(val: any) => (val !== null && val !== undefined ? val.toLocaleString() : '')}
                       style={{ fontWeight: 700 }}
                     />
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-
             </div>
           )}
         </div>
 
         {/* Right: Ranking cards with big numbers and progress bars */}
         <div className="space-y-3">
-          {/* <h3 className="text-2xl font-semibold">ደረጃ</h3> */}
+          <h3 className="text-2xl font-semibold">Ranking</h3>
 
           <div className="space-y-2">
             <AnimatePresence>
               {results.map((r, idx) => {
                 const weight = Number(r.totalWeight) || 0;
-                const pct =
-                  totals.totalWeight > 0
-                    ? Math.round((weight / totals.totalWeight) * 1000) / 10
-                    : 0; // 1 decimal
-
+                const pct = totals.totalWeight > 0 ? Math.round((weight / totals.totalWeight) * 1000) / 10 : 0; // 1 decimal
                 return (
                   <motion.div
                     key={r.nomineeId || r.name}
                     layout
-                    layoutId={r.nomineeId || r.name} // shared layout id for rank motion
-                    initial={{ opacity: 0, y: 15, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -15, scale: 0.95 }}
-                    transition={{
-                      layout: { type: 'spring', stiffness: 120, damping: 18 },
-                      duration: 0.35,
-                    }}
-                    className="flex flex-col gap-2 bg-white/5 p-3 rounded-xl shadow-md shadow-black/20"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex flex-col gap-2 bg-white/5 p-3 rounded-xl"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <motion.div
-                          layout
-                          transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                          className="text-2xl font-extrabold w-12 text-center"
-                        >
-                          {idx + 1}
-                        </motion.div>
-                        <div className='flex items-center gap-2'>
-                          <motion.div layout className="text-lg md:text-xl font-semibold">
-                            {r.nameAm}
-                          </motion.div>
-                          <div className="text-sm text-gray-300">
-                            ({weight.toLocaleString()} አክሲዮኖች)
-                          </div>
+                        <div className="text-2xl font-extrabold w-12 text-center">{idx + 1}</div>
+                        <div>
+                          <div className="text-lg md:text-xl font-semibold">{r.name}</div>
+                          <div className="text-sm text-gray-300">{weight.toLocaleString()} shares</div>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold">{pct}%</div>
-                        {/* <div className="text-sm text-gray-300">የተቆጠሩ አክሲዮኖች</div> */}
+                        <div className="text-sm text-gray-300">of counted shares</div>
                       </div>
                     </div>
 
-                    {/* progress bar with smooth transition */}
-                    <motion.div
-                      layout
-                      className="w-full bg-white/8 h-3 rounded-full overflow-hidden"
-                    >
-                      <motion.div
-                        initial={false}
-                        animate={{ width: `${Math.max(pct, 0)}%` }}
-                        transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+                    {/* progress bar */}
+                    <div className="w-full bg-white/8 h-3 rounded-full overflow-hidden">
+                      <div
                         className="h-full rounded-full"
-                        style={{ background: colors[idx % colors.length] }}
+                        style={{ width: `${Math.max(pct, 0)}%`, background: colors[idx % colors.length] }}
                       />
-                    </motion.div>
+                    </div>
                   </motion.div>
                 );
               })}
             </AnimatePresence>
-
           </div>
         </div>
       </div>
