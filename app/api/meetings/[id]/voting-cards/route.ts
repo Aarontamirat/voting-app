@@ -1,8 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request, context: { params: { id: string } }) {
-  const meetingId = context.params.id;
+export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
+
+  const meetingId = id;
 
   try {
     // Get meeting details
