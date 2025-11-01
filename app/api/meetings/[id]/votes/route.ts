@@ -7,8 +7,9 @@ const SubmitVotesSchema = z.object({
   nomineeIds: z.array(z.string().min(1)).min(1),
 });
 
-export async function POST(req: Request, context: { params: { id: string } }) {
-  const meetingId = context.params.id;
+export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
+  const {id} = await context.params;
+  const meetingId = id;
 
   try {
     const body = await req.json();
@@ -142,8 +143,9 @@ export async function POST(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function GET(req: Request, context: { params: { id: string } }) {
-  const meetingId = context.params.id;
+export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
+  const {id} = await context.params;
+  const meetingId = id;
   try {
     const meeting = await prisma.meeting.findUnique({ where: { id: meetingId } });
     if (!meeting) return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });

@@ -54,7 +54,7 @@ export default function ShareholdersPage() {
     const handleNext = () => setPage(p => Math.min(totalPages, p + 1));
 
     return (
-        <div className="max-w-6xl mx-auto py-10 space-y-6">
+        <div className="max-w-7xl mx-auto py-10 space-y-6">
             <Card className="shadow-md border border-gray-200">
                 <CardHeader className="flex items-center justify-between">
                     <CardTitle className="text-xl font-semibold">Shareholders Management</CardTitle>
@@ -66,6 +66,7 @@ export default function ShareholdersPage() {
                 <CardContent className="space-y-4">
                     <Input
                     placeholder="Search by ID, Name, or Phone"
+                    id="searcher"
                     value={q}
                     onChange={e => setQ(e.target.value)}
                     className="max-w-sm"

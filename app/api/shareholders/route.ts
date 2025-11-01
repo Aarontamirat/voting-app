@@ -38,7 +38,7 @@ const skip = (page - 1) * take;
 try {
 const [total, items, totalShareSum] = await prisma.$transaction([
 prisma.shareholder.count({ where }),
-prisma.shareholder.findMany({ where, skip, take, orderBy: { name: 'asc' } }),
+prisma.shareholder.findMany({ where, skip, take, orderBy: { id: 'asc' } }),
 prisma.shareholder.aggregate({ _sum: { shareValue: true } }),
 ]);
 

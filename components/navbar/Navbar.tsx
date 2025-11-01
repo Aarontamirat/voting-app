@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react"; // lightweight icons
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("");
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
@@ -21,6 +22,7 @@ export const Navbar = () => {
                 height={150}
                 alt="Logo"
                 priority
+                className="w-40 h-auto"
               />
               <span className="text-xl font-semibold text-gray-800 dark:text-gray-100">
                 Voting System
@@ -32,27 +34,37 @@ export const Navbar = () => {
           <div className="hidden md:flex space-x-6">
             <Link
               href="/shareholders"
-              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              onClick={() => {setSelectedTab('shareholders')}}
+              className={`${
+                selectedTab === "shareholders"
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              }`}
             >
               Shareholders
             </Link>
             <Link
               href="/meetings"
-              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              onClick={() => {setSelectedTab('meetings')}}
+              className={`${
+                selectedTab === "meetings"
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              }`}
             >
               Meetings
             </Link>
           </div>
 
           {/* --- Right: Login Button (always visible) --- */}
-          <div className="hidden md:flex">
+          {/* <div className="hidden md:flex">
             <Link
               href="/login"
               className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             >
               Login
             </Link>
-          </div>
+          </div> */}
 
           {/* --- Mobile Hamburger --- */}
           <div className="md:hidden flex items-center">
@@ -88,13 +100,13 @@ export const Navbar = () => {
           >
             Meetings
           </Link>
-          <Link
+          {/* <Link
             href="/login"
             className="block px-2 py-2 rounded-md bg-blue-600 text-white text-center hover:bg-blue-700 transition"
             onClick={() => setIsOpen(false)}
           >
             Login
-          </Link>
+          </Link> */}
         </div>
       </div>
     </nav>

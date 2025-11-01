@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -89,39 +89,40 @@ export default function ShareholderModal({ isOpen, onClose, mode, initialData, o
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{mode === 'add' ? 'Add New Shareholder' : 'Edit Shareholder'}</DialogTitle>
+          <DialogDescription>{mode === 'add' ? 'Add a new shareholder' : 'Edit existing shareholder'}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
           {mode === 'add' && (
             <div>
-              <label className="block text-sm font-medium mb-1">ID</label>
-              <Input value={id} onChange={e => setId(e.target.value)} />
+              <label htmlFor='id' className="block text-sm font-medium mb-1">ID</label>
+              <Input id='id' value={id} onChange={e => setId(e.target.value)} />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <Input value={name} onChange={e => setName(e.target.value)} />
+            <label htmlFor='name' className="block text-sm font-medium mb-1">Name</label>
+            <Input id='name' value={name} onChange={e => setName(e.target.value)} autoComplete='true' />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Amharic Name</label>
-            <Input value={nameAm} onChange={e => setNameAm(e.target.value)} />
+            <label htmlFor='nameam' className="block text-sm font-medium mb-1">Amharic Name</label>
+            <Input id='nameam' value={nameAm} onChange={e => setNameAm(e.target.value)} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Phone</label>
-            <Input value={phone} onChange={e => setPhone(e.target.value)} />
+            <label htmlFor='phone' className="block text-sm font-medium mb-1">Phone</label>
+            <Input id='phone' value={phone} onChange={e => setPhone(e.target.value)}  autoComplete='true' />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Address</label>
-            <Input value={address} onChange={e => setAddress(e.target.value)} />
+            <label htmlFor='address' className="block text-sm font-medium mb-1">Address</label>
+            <Input id='address' value={address} onChange={e => setAddress(e.target.value)}  autoComplete='true' />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Share Value</label>
-            <Input value={shareValue} onChange={e => setShareValue(e.target.value)} />
+            <label htmlFor='sharevalue' className="block text-sm font-medium mb-1">Share Value</label>
+            <Input id='sharevalue' value={shareValue} onChange={e => setShareValue(e.target.value)} />
           </div>
         </div>
 

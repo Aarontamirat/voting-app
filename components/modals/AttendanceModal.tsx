@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
@@ -126,6 +126,7 @@ export default function AttendanceModal({ isOpen, onClose, meeting, onSuccess }:
       <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle>Attendance — {meeting.title}</DialogTitle>
+          <DialogDescription>Record attendance here</DialogDescription>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1 px-1 space-y-4">

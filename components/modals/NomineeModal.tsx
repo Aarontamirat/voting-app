@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
@@ -76,6 +76,7 @@ export default function NomineeModal({ isOpen, onClose, meeting, onSuccess }: No
       <DialogContent className="DialogContent max-w-lg max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Nominees - {meeting?.title}</DialogTitle>
+          <DialogDescription>Manage nominees here</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">

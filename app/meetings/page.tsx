@@ -98,11 +98,12 @@ export default function MeetingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
-            <Input placeholder="Search by title" value={q} onChange={e => setQ(e.target.value)} />
-            <select className="border rounded p-1" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+            <Input placeholder="Search by title" id='searcher' value={q} onChange={e => setQ(e.target.value)} />
+            <select className="border rounded p-1" id='statusFilterer' value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
               <option value="">All Status</option>
               <option value="DRAFT">DRAFT</option>
               <option value="OPEN">Open</option>
+              <option value="VOTINGOPEN">Voting Open</option>
               <option value="CLOSED">Closed</option>
             </select>
           </div>
@@ -138,7 +139,7 @@ export default function MeetingsPage() {
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => { setModalMode('edit'); setSelectedMeeting(m); setIsMeetingModalOpen(true); }}>Edit</DropdownMenuItem>
                         {m.status === 'DRAFT' && <DropdownMenuItem onClick={() => handleOpenMeeting(m.id)}>Open</DropdownMenuItem>}
-                        {m.status === 'OPEN' && <DropdownMenuItem onClick={() => handleCloseMeeting(m.id)}>Close</DropdownMenuItem>}
+                        {(m.status === 'OPEN' || m.status === 'VOTINGOPEN') && <DropdownMenuItem onClick={() => handleCloseMeeting(m.id)}>Close</DropdownMenuItem>}
                         {(m.status === 'OPEN' || m.status === 'VOTINGOPEN') && <DropdownMenuItem onClick={() => { setAttendanceMeeting(m); setIsAttendanceOpen(true); }}>Attendance</DropdownMenuItem>}
                         {(m.status === 'OPEN' || m.status === 'VOTINGOPEN') && <DropdownMenuItem onClick={() => window.location.href = `/meetings/${m.id}/attendance/live`}>Live Attendance</DropdownMenuItem>}
                         {m.status === 'VOTINGOPEN' && <DropdownMenuItem onClick={() => { setNomineeMeeting(m); setIsNomineeOpen(true); }}>Nominees</DropdownMenuItem>}

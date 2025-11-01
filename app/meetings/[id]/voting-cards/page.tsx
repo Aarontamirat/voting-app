@@ -75,14 +75,23 @@ export default function VotingCardsPage() {
             >
               {/* Header */}
               <div className="flex justify-between mb-1 gap-4">
-                <Image src={Logo} alt="Logo" width={200} height={20} />
-                <div className="flex items-center text-sm gap-4 whitespace-nowrap pr-2">
-                  <p><strong>Voter ID:</strong> {voter.id}</p>
-                  <p><strong>Voter Name:</strong> {voter.name}</p>
-                  <p><strong>Share Value:</strong> {voter.shareValue}</p>
-                  <p><strong>Is Above 2%?:</strong> {
-                    Number(voter.shareValue) >= (Number(totalShares) * 0.02) ? 'Yes' : 'No'
-                  }</p>
+                <Image src={Logo} alt="Logo" className='w-40 h-auto' />
+                <div className="">
+                  <div className="flex items-center text-sm gap-4 whitespace-nowrap pr-2">
+                    <p><strong>Voter ID:</strong> {voter.id}</p>
+                    <p><strong>Voter Name:</strong> {voter.name}</p>
+                    <p><strong>Share Value:</strong> {voter.shareValue}</p>
+                  </div>
+                  <div className="">
+                    <p>
+                      {
+                        Number(voter.shareValue) >= (Number(totalShares) * 0.02) &&
+                      <span className="text-sm font-bold text-green-500">
+                        [Influencial Shareholder]
+                      </span>
+                      }
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -103,7 +112,9 @@ export default function VotingCardsPage() {
                     >
                       <span className="flex-1 text-sm">
                         {n.name}
-                        {Number(n.shareValue) >= (Number(totalShares) * 0.02) ? ' (Top 2%)' : ''}
+                        {Number(n.shareValue) >= (Number(totalShares) * 0.02) &&
+                        <span className="ml-2 text-sm font-bold text-green-500">(Influencial)</span>
+                        }
                       </span>
 
                       <input type="checkbox" className="w-4 h-4 border-gray-600" readOnly />

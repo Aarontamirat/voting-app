@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -37,6 +37,7 @@ export default function ShareholderDeleteModal({ isOpen, onClose, shareholder, o
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Shareholder</DialogTitle>
+          <DialogDescription>Delete shareholders here</DialogDescription>
         </DialogHeader>
 
         <p className="mt-2 text-sm text-gray-600">

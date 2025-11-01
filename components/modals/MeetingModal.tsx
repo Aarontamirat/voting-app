@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -92,6 +92,7 @@ export default function MeetingModal({ isOpen, onClose, mode, initialData, onSuc
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>{mode === 'add' ? 'Add New Meeting' : 'Edit Meeting'}</DialogTitle>
+          <DialogDescription>{mode === 'add' ? 'Add a new meeting' : 'Edit a meeting'}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
