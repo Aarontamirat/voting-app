@@ -115,6 +115,7 @@ model Nominee {
   id          String   @id @default(cuid())
   name        String
   nameAm      String?
+  type        String
   description String?
   meetingId   String
   shareholderId     String

@@ -1,42 +1,49 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
 const CreateNomineeSchema = z.object({
-  shareholderId: z.string().min(1, 'shareholderId is required'),
+  shareholderId: z.string().min(1, "shareholderId is required"),
+  type: z.string().min(1, "type is required"),
   description: z.string().optional().nullable(),
 });
 
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
   try {
     const meeting = await prisma.meeting.findUnique({ where: { id } });
     if (!meeting)
-      return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });
+      return NextResponse.json({ error: "Meeting not found" }, { status: 404 });
 
     const nominees = await prisma.nominee.findMany({
       where: { meetingId: id },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
 
     const shareholders = await prisma.shareholder.findMany({
-      orderBy: { name: 'asc' },
-    })
+      orderBy: { name: "asc" },
+    });
 
     return NextResponse.json({
       meetingStatus: meeting.status,
       items: nominees,
-      shareholders
+      shareholders,
     });
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message ?? 'Failed to get nominees' },
+      { error: err.message ?? "Failed to get nominees" },
       { status: 500 }
     );
   }
 }
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
   try {
     const body = await req.json();
@@ -45,11 +52,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     // 1. Validate meeting
     const meeting = await prisma.meeting.findUnique({ where: { id } });
     if (!meeting)
-      return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });
+      return NextResponse.json({ error: "Meeting not found" }, { status: 404 });
 
-    if (meeting.status === 'CLOSED')
+    if (meeting.status === "CLOSED")
       return NextResponse.json(
-        { error: 'Cannot add nominee to closed meeting' },
+        { error: "Cannot add nominee to closed meeting" },
         { status: 400 }
       );
 
@@ -59,7 +66,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     });
     if (!shareholder)
       return NextResponse.json(
-        { error: 'Shareholder not found' },
+        { error: "Shareholder not found" },
         { status: 404 }
       );
 
@@ -74,7 +81,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     if (existing)
       return NextResponse.json(
-        { error: 'This shareholder is already nominated' },
+        { error: "This shareholder is already nominated" },
         { status: 400 }
       );
 
@@ -82,6 +89,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const created = await prisma.nominee.create({
       data: {
         name: shareholder.name,
+        type: parsed.type,
         description: parsed.description ?? null,
         meetingId: id,
         shareholderId: shareholder.id,
@@ -94,7 +102,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (err?.issues)
       return NextResponse.json({ error: err.issues }, { status: 400 });
     return NextResponse.json(
-      { error: err.message ?? 'Failed to create nominee' },
+      { error: err.message ?? "Failed to create nominee" },
       { status: 400 }
     );
   }
