@@ -22,6 +22,7 @@ export default function LiveVotingPresentation() {
   const { id } = useParams();
   const [results, setResults] = useState<any[]>([]);
   const [meetingStatus, setMeetingStatus] = useState<string>("");
+  const [sharesAttended, setSharesAttended] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -60,6 +61,7 @@ export default function LiveVotingPresentation() {
           .sort((a: any, b: any) => b.totalWeight - a.totalWeight);
         setResults(sorted);
         setMeetingStatus(data.meetingStatus || "");
+        setSharesAttended(data.totalSharesAttended || 0);
       } catch (err: any) {
         toast.error(err.message || "Error fetching results");
       } finally {
@@ -146,7 +148,7 @@ export default function LiveVotingPresentation() {
             አጠቃላይ ያሉ አክስዮኖች
           </div>
           <div className="text-base lg:text-lg font-bold">
-            [ {totals.totalWeight.toLocaleString()} ]
+            {sharesAttended.toLocaleString()}
           </div>
         </div>
 
@@ -179,8 +181,8 @@ export default function LiveVotingPresentation() {
             {results.map((r, idx) => {
               const weight = Number(r.totalWeight) || 0;
               const pct =
-                totals.totalWeight > 0
-                  ? Math.round((weight / totals.totalWeight) * 1000) / 10
+                sharesAttended > 0
+                  ? Math.round((weight / sharesAttended) * 1000) / 10
                   : 0; // 1 decimal
 
               return (

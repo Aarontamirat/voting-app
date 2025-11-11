@@ -1,14 +1,17 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { z } from 'zod';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
 const SubmitVotesSchema = z.object({
   voterId: z.string().min(1),
   nomineeIds: z.array(z.string().min(1)).min(1),
 });
 
-export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
-  const {id} = await context.params;
+export async function POST(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
   const meetingId = id;
 
   try {
@@ -16,10 +19,16 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     const parsed = SubmitVotesSchema.parse(body);
 
     // Check if meeting exists and is open for voting
-    const meeting = await prisma.meeting.findUnique({ where: { id: meetingId } });
-    if (!meeting) return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });
-    if (meeting.status !== 'OPEN' && meeting.status !== 'VOTINGOPEN') {
-      return NextResponse.json({ error: 'Meeting not open for voting' }, { status: 400 });
+    const meeting = await prisma.meeting.findUnique({
+      where: { id: meetingId },
+    });
+    if (!meeting)
+      return NextResponse.json({ error: "Meeting not found" }, { status: 404 });
+    if (meeting.status !== "OPEN" && meeting.status !== "VOTINGOPEN") {
+      return NextResponse.json(
+        { error: "Meeting not open for voting" },
+        { status: 400 }
+      );
     }
 
     // Determine if voter is representative or shareholder
@@ -59,7 +68,9 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
 
       // Calculate weight
       if (possibleRep.shareholderId) {
-        const repShare = await prisma.shareholder.findUnique({ where: { id: possibleRep.shareholderId } });
+        const repShare = await prisma.shareholder.findUnique({
+          where: { id: possibleRep.shareholderId },
+        });
         weight += Number(repShare?.shareValue ?? 0);
       }
 
@@ -68,7 +79,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         select: { shareholderId: true },
       });
       if (reps.length > 0) {
-        const ids = reps.map(r => r.shareholderId);
+        const ids = reps.map((r) => r.shareholderId);
         const sumAgg = await prisma.shareholder.aggregate({
           where: { id: { in: ids } },
           _sum: { shareValue: true },
@@ -77,8 +88,11 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       }
     } else {
       // --- If voter is a shareholder ---
-      const sh = await prisma.shareholder.findUnique({ where: { id: parsed.voterId } });
-      if (!sh) return NextResponse.json({ error: 'Voter not found' }, { status: 404 });
+      const sh = await prisma.shareholder.findUnique({
+        where: { id: parsed.voterId },
+      });
+      if (!sh)
+        return NextResponse.json({ error: "Voter not found" }, { status: 404 });
       weight = Number(sh.shareValue);
 
       // Ensure shareholder attended the meeting
@@ -91,12 +105,18 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
 
     // Reject if not eligible
     if (!isEligible) {
-      return NextResponse.json({ error: 'Voter did not attend this meeting and cannot vote' }, { status: 403 });
+      return NextResponse.json(
+        { error: "Voter did not attend this meeting and cannot vote" },
+        { status: 403 }
+      );
     }
 
     // Reject zero-weight votes
     if (weight <= 0) {
-      return NextResponse.json({ error: 'Vote weight is zero; cannot submit vote.' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Vote weight is zero; cannot submit vote." },
+        { status: 400 }
+      );
     }
 
     // Transaction: Prevent duplicate votes, create only new ones
@@ -111,8 +131,8 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         select: { nomineeId: true },
       });
 
-      const alreadyVotedSet = new Set(existing.map(e => e.nomineeId));
-      const toCreate = nomineeIds.filter(id => !alreadyVotedSet.has(id));
+      const alreadyVotedSet = new Set(existing.map((e) => e.nomineeId));
+      const toCreate = nomineeIds.filter((id) => !alreadyVotedSet.has(id));
 
       if (toCreate.length === 0) {
         return { created: [], already: nomineeIds };
@@ -131,39 +151,97 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         created.push(c);
       }
 
-      return { created, already: existing.map(e => e.nomineeId) };
+      return { created, already: existing.map((e) => e.nomineeId) };
     });
 
-    return NextResponse.json({ ok: true, created: result.created, already: result.already });
+    return NextResponse.json({
+      ok: true,
+      created: result.created,
+      already: result.already,
+    });
   } catch (err: any) {
     if (err?.issues) {
       return NextResponse.json({ error: err.issues }, { status: 400 });
     }
-    return NextResponse.json({ error: err.message ?? 'Failed to submit votes' }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message ?? "Failed to submit votes" },
+      { status: 500 }
+    );
   }
 }
 
-export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
-  const {id} = await context.params;
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
   const meetingId = id;
   try {
-    const meeting = await prisma.meeting.findUnique({ where: { id: meetingId } });
-    if (!meeting) return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });
+    // parse optional voterId query param
+    const url = new URL(req.url);
+    const voterId = url.searchParams.get("voterId");
+
+    // If caller requests votes for a particular voter, return those nomineeIds
+    if (voterId) {
+      // ensure meeting exists
+      const meeting = await prisma.meeting.findUnique({
+        where: { id: meetingId },
+      });
+      if (!meeting)
+        return NextResponse.json(
+          { error: "Meeting not found" },
+          { status: 404 }
+        );
+
+      // fetch votes by this voter for the meeting
+      const votes = await prisma.vote.findMany({
+        where: { meetingId, voterId },
+        select: { nomineeId: true, weight: true },
+      });
+
+      const votedNomineeIds = votes.map((v) => v.nomineeId);
+      const totalWeight = votes.reduce((s, v) => s + Number(v.weight), 0);
+
+      return NextResponse.json({
+        meetingStatus: meeting.status,
+        voterId,
+        voted: votedNomineeIds,
+        voterWeight: totalWeight,
+      });
+    }
+
+    // Default behavior: aggregated results + total attended shares (unchanged)
+    const meeting = await prisma.meeting.findUnique({
+      where: { id: meetingId },
+    });
+    if (!meeting)
+      return NextResponse.json({ error: "Meeting not found" }, { status: 404 });
 
     const nominees = await prisma.nominee.findMany({ where: { meetingId } });
 
     const grouped = await prisma.vote.groupBy({
-      by: ['nomineeId'],
+      by: ["nomineeId"],
       where: { meetingId },
       _sum: { weight: true },
     });
+
+    // Get the total share value of the attended shareholders
+    const attendanceList = await prisma.attendance.findMany({
+      where: { meetingId },
+      include: { shareholder: true },
+    });
+
+    const attendedShares = attendanceList.reduce(
+      (sum, a) => sum + Number(a.shareholder.shareValue),
+      0
+    );
 
     const results = nominees.map((n) => {
       const g = grouped.find((x) => x.nomineeId === n.id);
       return {
         nomineeId: n.id,
         name: n.name,
-        nameAm: n.nameAm,
+        nameAm: (n as any).nameAm,
         description: n.description,
         totalWeight: Number(g?._sum.weight ?? 0),
       };
@@ -171,8 +249,15 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 
     results.sort((a, b) => b.totalWeight - a.totalWeight);
 
-    return NextResponse.json({ meetingStatus: meeting.status, results });
+    return NextResponse.json({
+      meetingStatus: meeting.status,
+      results,
+      totalSharesAttended: attendedShares,
+    });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message ?? 'Failed to fetch results' }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message ?? "Failed to fetch results" },
+      { status: 500 }
+    );
   }
 }

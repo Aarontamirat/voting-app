@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'sonner';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import Loader from '@/components/general/Loader';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import Loader from "@/components/general/Loader";
 
 export default function LiveAttendancePage() {
   const { id } = useParams();
@@ -27,10 +27,12 @@ export default function LiveAttendancePage() {
         const shareholdersData = await shareholdersRes.json();
 
         if (!attendanceRes.ok)
-          throw new Error(attendanceData.error || 'Failed to load attendance');
+          throw new Error(attendanceData.error || "Failed to load attendance");
 
         setData(attendanceData);
-        setTotalShareholders(shareholdersData.total || shareholdersData.length || 0);
+        setTotalShareholders(
+          shareholdersData.total || shareholdersData.length || 0
+        );
       } catch (err: any) {
         toast.error(err.message);
       }
@@ -41,16 +43,14 @@ export default function LiveAttendancePage() {
     return () => clearInterval(interval);
   }, [id]);
 
-  if (!data)
-    return (
-      <Loader />
-    );
+  if (!data) return <Loader />;
 
-  const { totalShares, attendedShares, attendance, quorumPct, quorumMet } = data;
+  const { totalShares, attendedShares, attendance, quorumPct, quorumMet } =
+    data;
   const attendedCount = attendance.length;
-  const quorumTarget = (totalShares * quorumPct) / 100;
-  const progressPct = Math.min((attendedShares / quorumTarget) * 100, 100);
-  const gaugeColor = quorumMet ? '#00b84d' : '#0094ff';
+  // const quorumTarget = (totalShares * quorumPct) / 100;
+  const progressPct = Math.min((attendedShares / totalShares) * 100, 100);
+  const gaugeColor = quorumMet ? "#00b84d" : "#0094ff";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-200 text-gray-800 py-12 px-6">
@@ -75,26 +75,26 @@ export default function LiveAttendancePage() {
             className="relative w-72 h-72 md:w-96 md:h-96"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 70 }}
+            transition={{ type: "spring", stiffness: 70 }}
           >
             {/* Rotating halo glow */}
             <motion.div
               className="absolute inset-0 rounded-full bg-gradient-to-r from-sky-300 via-blue-400 to-sky-300 blur-3xl opacity-30"
               animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+              transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
             />
 
             {/* Circular Gauge */}
             <CircularProgressbar
               value={progressPct}
-              text={`${progressPct.toFixed(0)}%`}
+              text={`${progressPct.toFixed(2)}%`}
               styles={buildStyles({
                 textColor: gaugeColor,
                 pathColor: gaugeColor,
-                trailColor: '#e5e7eb',
-                textSize: '18px',
+                trailColor: "#e5e7eb",
+                textSize: "18px",
                 pathTransitionDuration: 1.5,
-                strokeLinecap: 'round',
+                strokeLinecap: "round",
               })}
             />
 
@@ -112,10 +112,12 @@ export default function LiveAttendancePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className={`mt-8 text-2xl font-semibold ${
-              quorumMet ? 'text-green-600' : 'text-sky-600'
+              quorumMet ? "text-green-600" : "text-sky-600"
             }`}
           >
-            {quorumMet ? 'ምልአተ ጉባኤ ሞልቷል — ስብሰባው ለመካሄድ ዝግጁ ነው' : 'ተጨማሪ ተሳታፊዎችን በመጠበቅ ላይ ...'}
+            {quorumMet
+              ? "ምልአተ ጉባኤ ሞልቷል — ስብሰባው ለመካሄድ ዝግጁ ነው"
+              : "ተጨማሪ ተሳታፊዎችን በመጠበቅ ላይ ..."}
           </motion.p>
         </div>
 
@@ -127,10 +129,10 @@ export default function LiveAttendancePage() {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
         >
           {[
-            { label: 'አጠቃላይ ሼሮች', value: totalShares },
-            { label: 'አጠቃላይ ባለአክስዮኖች', value: totalShareholders },
-            { label: 'ተሳታፊዎች', value: attendedCount },
-            { label: 'የተሳታፊዎች አክስዮን ብዛት', value: attendedShares },
+            { label: "አጠቃላይ ሼሮች", value: totalShares },
+            { label: "አጠቃላይ ባለአክስዮኖች", value: totalShareholders },
+            { label: "ተሳታፊዎች", value: attendedCount },
+            { label: "የተሳታፊዎች አክስዮን ብዛት", value: attendedShares },
           ].map((item, idx) => (
             <motion.div
               key={idx}
