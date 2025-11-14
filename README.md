@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 **Weighted Voting & Shareholder Management System**
 
-## Getting Started
+A futuristic, real-time, share‑weighted voting platform designed for
+modern organizations.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ **Overview**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This system empowers organizations to run transparent, fair, and
+weighted elections where each shareholder's voting power corresponds to
+their share value. Built with **Next.js**, **Prisma**, **TailwindCSS**,
+and enhanced with live animations and real-time dashboards.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Created with precision and elegance by **Aaron Tamirat**.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 **Key Features**
 
-To learn more about Next.js, take a look at the following resources:
+### 🧾 **Shareholder Registry**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Add, update, and manage shareholders\
+- Automatic share‑value‑based weighting\
+- Fast lookup and smart search
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📋 **Meeting Management**
 
-## Deploy on Vercel
+- Create and manage meetings\
+- Track attendance\
+- Auto‑generated voter lists
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🗳️ **Weighted Voting System**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Live animated voting dashboard\
+- Share‑based vote calculations\
+- Real-time updates with futuristic visuals\
+- Circular animated progress rings
+
+### 🧑‍💼 **Nominee Management**
+
+- Add nominees linked to shareholders\
+- Prevent double voting\
+- Disable already‑voted options
+
+### 🖨️ **Printable Voting Cards**
+
+- Compact, elegant voting cards\
+- 2 cards per page for paper efficiency\
+- Includes:
+  - Voter ID\
+  - Voter Name\
+  - Share Value\
+  - Nominee checkboxes\
+  - Signature line
+
+### 📊 **Reports & Insights**
+
+- Total shares registered\
+- Shares present in meeting\
+- Vote breakdown by weight\
+- Attendance breakdown
+
+---
+
+## 🛠️ **Tech Stack**
+
+Layer Technology
+
+---
+
+**Tech Stack**
+
+- Frontend: Next.js 15, React, TailwindCSS, Framer Motion
+- Backend: Next.js Route Handlers, Prisma ORM
+- Database: PostgreSQL / MySQL
+- UI Components: shadcn/ui
+- Real-Time Optimistic updates + fast revalidation
+- Visualization: Animated SVG circular progress bars
+
+---
+
+## 🔥 **Live Voting Dashboard Preview**
+
+    ○ ● ⚡ Futuristic animated dashboard
+    ○ ● Live weight updates
+    ○ ● Auto-sorting by vote count
+
+---
+
+## 🎨 **Design Philosophy**
+
+> _"Clean, futuristic, minimalist --- built for large LED displays."_\
+> Light backgrounds, glowing accents, smooth animations, and a
+> professional corporate aesthetic.
+
+---
+
+## 📁 **Project Structure**
+
+    /app
+      /meetings
+      /voting
+      /api
+    /prisma
+    /components
+    /public
+
+---
+
+## 👨‍💻 **Author**
+
+**Aaron Tamirat**\
+Full-stack Developer • System Architect\
+Building modern enterprise tools with code and creativity.
+
+---
+
+## ⭐ **Support & Showcase**
+
+If you use this project in your organization, give credit to keep the
+ecosystem inspiring and motivating.
+
+---
