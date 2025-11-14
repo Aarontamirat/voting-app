@@ -242,6 +242,7 @@ export async function GET(
         nomineeId: n.id,
         name: n.name,
         nameAm: (n as any).nameAm,
+        type: n.type,
         description: n.description,
         totalWeight: Number(g?._sum.weight ?? 0),
       };
