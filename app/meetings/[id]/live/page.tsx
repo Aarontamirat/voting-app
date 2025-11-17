@@ -26,6 +26,8 @@ export default function LiveVotingPresentation() {
   const { id } = useParams();
   const [results, setResults] = useState<any[]>([]);
   const [meetingStatus, setMeetingStatus] = useState<string>("");
+  const [firstPassers, setFirstPassers] = useState<number>(0);
+  const [secondPassers, setSecondPassers] = useState<number>(0);
   const [sharesAttended, setSharesAttended] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -47,6 +49,8 @@ export default function LiveVotingPresentation() {
         const sortedResults = (data.results || []).slice();
         setResults(sortedResults);
         setMeetingStatus(data.meetingStatus || "");
+        setFirstPassers(data.meetingFirstPassers || 0);
+        setSecondPassers(data.meetingSecondPassers || 0);
         setSharesAttended(data.totalSharesAttended || 0);
       } catch (err: any) {
         toast.error(err.message || "Error fetching results");
@@ -75,8 +79,8 @@ export default function LiveVotingPresentation() {
       .filter((r) => r.type === "second")
       .sort((a, b) => b.totalWeight - a.totalWeight);
 
-    const topType1 = type1Nominees.slice(0, 6);
-    const topType2 = type2Nominees.slice(0, 3);
+    const topType1 = type1Nominees.slice(0, firstPassers);
+    const topType2 = type2Nominees.slice(0, secondPassers);
 
     // Merge top winners and sort by weight
     const top9 = [...topType1, ...topType2].sort(
@@ -202,7 +206,9 @@ export default function LiveVotingPresentation() {
                   duration: 0.35,
                 }}
                 className={`flex flex-col gap-2 p-3 rounded-xl shadow-md shadow-black/20 ${
-                  idx < 9 ? "bg-green-300/20" : "bg-white/5"
+                  idx < firstPassers + secondPassers
+                    ? "bg-green-300/20"
+                    : "bg-white/5"
                 }`}
               >
                 <div className="flex items-center justify-between">

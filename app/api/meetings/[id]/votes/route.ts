@@ -202,11 +202,16 @@ export async function GET(
       const votedNomineeIds = votes.map((v) => v.nomineeId);
       const totalWeight = votes.reduce((s, v) => s + Number(v.weight), 0);
 
+      // max votes per nominee
+      const maxVotes =
+        (meeting.firstPassers || 0) + (meeting.secondPassers || 0);
+
       return NextResponse.json({
         meetingStatus: meeting.status,
         voterId,
         voted: votedNomineeIds,
         voterWeight: totalWeight,
+        maxVotes,
       });
     }
 
@@ -254,6 +259,8 @@ export async function GET(
       meetingStatus: meeting.status,
       results,
       totalSharesAttended: attendedShares,
+      meetingFirstPassers: meeting.firstPassers,
+      meetingSecondPassers: meeting.secondPassers,
     });
   } catch (err: any) {
     return NextResponse.json(

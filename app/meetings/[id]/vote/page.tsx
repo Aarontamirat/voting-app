@@ -18,11 +18,11 @@ export default function VotePage() {
   const [voterId, setVoterId] = useState("");
   const [voterEligible, setVoterEligible] = useState<boolean | null>(null);
   const [voteWeight, setVoteWeight] = useState<number | null>(null);
+  const [maxVotes, setMaxVotes] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
   const nomineesRef = useRef<HTMLDivElement>(null);
-  const MAX_VOTES = 9;
   let voterCheckTimer: number | undefined;
 
   useEffect(() => {
@@ -96,6 +96,9 @@ export default function VotePage() {
           );
           setVoteWeight(att ? Number(att.shareValue) : null);
         }
+
+        // set Maxvotes
+        setMaxVotes(votesData.maxVotes);
       } else {
         // if votes endpoint failed, still set weight from attendance
         const att = attData.attendance.find(
@@ -131,8 +134,8 @@ export default function VotePage() {
       return;
     }
 
-    if (selectedNominees.length >= MAX_VOTES) {
-      toast.error(`Maximum ${MAX_VOTES} nominees allowed.`);
+    if (selectedNominees.length >= maxVotes) {
+      toast.error(`Maximum ${maxVotes} nominees allowed.`);
       return;
     }
 
@@ -237,7 +240,7 @@ export default function VotePage() {
 
               <div ref={nomineesRef}>
                 <h3 className="text-sm font-medium mb-2">
-                  Select up to {MAX_VOTES} nominees
+                  Select up to {maxVotes} nominees
                 </h3>
 
                 <div className="space-y-2">
