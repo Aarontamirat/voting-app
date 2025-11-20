@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { CheckCheckIcon, CircleCheck, CircleX } from "lucide-react";
 
 export default function VotePage() {
   const { id } = useParams();
 
   const [meeting, setMeeting] = useState<any>(null);
+  const [meetingName, setMeetingName] = useState("");
   const [nominees, setNominees] = useState<any[]>([]);
   const [selectedNominees, setSelectedNominees] = useState<string[]>([]);
   const [previousVotes, setPreviousVotes] = useState<string[]>([]);
@@ -33,6 +35,7 @@ export default function VotePage() {
       .then((data) => {
         setMeeting({ status: data.meetingStatus });
         setNominees(data.items || []);
+        setMeetingName(data.meetingName);
       })
       .catch(() => toast.error("Failed to load nominees"));
   }, [id]);
@@ -200,7 +203,8 @@ export default function VotePage() {
       <Card className="shadow-md border bg-white">
         <CardHeader>
           <CardTitle className="text-xl font-semibold">
-            Meeting Voting
+            Meeting Title:{" "}
+            <span className="text-neutral-500 italic">{meetingName}</span>
           </CardTitle>
         </CardHeader>
 
@@ -213,29 +217,31 @@ export default function VotePage() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Voter ID
+                  Enter Voter ID
                 </label>
-                <Input
-                  value={voterId}
-                  onChange={(e) => onVoterInput(e.target.value)}
-                  placeholder="e.g. SH12345"
-                />
+                <div className="flex items-center justify-between space-x-2">
+                  <Input
+                    value={voterId}
+                    onChange={(e) => onVoterInput(e.target.value)}
+                    placeholder="e.g. LUC-SH-000"
+                  />
 
-                {voterEligible === false && (
-                  <p className="text-red-600 text-sm mt-1">
-                    This voter did not attend.
-                  </p>
-                )}
-                {voterEligible === true && (
-                  <p className="text-green-600 text-sm mt-1">
-                    Attended: Eligible to Vote.
-                  </p>
-                )}
-                {voteWeight !== null && (
-                  <p className="text-blue-600 text-sm mt-1">
-                    Voting Weight: <strong>{voteWeight}</strong>
-                  </p>
-                )}
+                  {voterEligible === false && (
+                    <p className="text-red-600 text-sm mt-1">
+                      <CircleX />
+                    </p>
+                  )}
+                  {voterEligible === true && (
+                    <p className="text-green-600 text-sm mt-1">
+                      <CircleCheck />
+                    </p>
+                  )}
+                  {/*{voteWeight !== null && (*/}
+                  {/*  <p className="text-blue-600 text-sm mt-1">*/}
+                  {/*    Voting Weight: <strong>{voteWeight}</strong>*/}
+                  {/*  </p>*/}
+                  {/*)}*/}
+                </div>
               </div>
 
               <div ref={nomineesRef}>
@@ -251,8 +257,13 @@ export default function VotePage() {
                         <Checkbox
                           id={n.id}
                           checked={selectedNominees.includes(n.id)}
-                          disabled={already || loading}
+                          disabled={already || loading || !voterEligible}
                           onCheckedChange={() => toggleNominee(n.id)}
+                          className={`border border-neutral-500 ${
+                            !voterEligible
+                              ? "bg-red-950 border-red-900"
+                              : "bg-neutral-200 data-[state=checked]:text-green-600"
+                          }`}
                         />
                         <label
                           htmlFor={n.id}
@@ -261,12 +272,12 @@ export default function VotePage() {
                           }`}
                         >
                           {n.name}{" "}
-                          {already && (
-                            <span className="ml-2 text-green-600">
-                              (already voted)
-                            </span>
-                          )}
                         </label>
+                        {already && (
+                          <span className="ml-2 text-green-600">
+                            <CheckCheckIcon className="w-4 h-4" />
+                          </span>
+                        )}
                       </div>
                     );
                   })}

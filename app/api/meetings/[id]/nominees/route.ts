@@ -31,6 +31,7 @@ export async function GET(
       meetingStatus: meeting.status,
       items: nominees,
       shareholders,
+        meetingName: meeting.title,
     });
   } catch (err: any) {
     return NextResponse.json(
