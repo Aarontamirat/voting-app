@@ -22,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import LoaderRotatingLines from "@/components/general/LoaderRotatingLines";
 
 export default function MeetingsPage() {
   const [meetings, setMeetings] = useState<any[]>([]);
@@ -31,6 +32,7 @@ export default function MeetingsPage() {
   const [take] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
 
   const [isMeetingModalOpen, setIsMeetingModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
@@ -43,7 +45,7 @@ export default function MeetingsPage() {
   const [nomineeMeeting, setNomineeMeeting] = useState<any>(null);
 
   const fetchMeetings = async () => {
-    setLoading(true);
+    setFetching(true);
     try {
       const params = new URLSearchParams({
         q,
@@ -56,14 +58,17 @@ export default function MeetingsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to fetch meetings");
       setMeetings(data.items || []);
       setTotalPages(Math.ceil((data.total || 0) / take));
+      setFetching(false);
     } catch (err: any) {
       toast.error(err.message || "Unknown error");
+      setFetching(false);
     } finally {
-      setLoading(false);
+      setFetching(false);
     }
   };
 
   const handleDeleteMeeting = async (meetingId: string) => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/meetings/${meetingId}`, {
         method: "DELETE",
@@ -72,8 +77,10 @@ export default function MeetingsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to delete meeting");
       toast.success("Meeting deleted successfully");
       fetchMeetings();
+      setLoading(false);
     } catch (err: any) {
       toast.error(err.message || "Unknown error");
+      setLoading(false);
     }
   };
 
@@ -85,6 +92,7 @@ export default function MeetingsPage() {
   const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));
 
   const handleOpenMeeting = async (meetingId: string) => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/meetings/${meetingId}/open`, {
         method: "POST",
@@ -93,12 +101,15 @@ export default function MeetingsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to open meeting");
       toast.success("Meeting opened successfully");
       fetchMeetings();
+      setLoading(false);
     } catch (err: any) {
       toast.error(err.message || "Unknown error");
+      setLoading(false);
     }
   };
 
   const handleCloseMeeting = async (meetingId: string) => {
+    setLoading(true);
     try {
       const res = await fetch(`/api/meetings/${meetingId}/close`, {
         method: "POST",
@@ -107,16 +118,18 @@ export default function MeetingsPage() {
       if (!res.ok) throw new Error(data.error || "Failed to close meeting");
       toast.success("Meeting closed successfully");
       fetchMeetings();
+      setLoading(false);
     } catch (err: any) {
       toast.error(err.message || "Unknown error");
+      setLoading(false);
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto py-10 space-y-6">
-      <Card className="shadow-md border border-gray-200">
+      <Card className="shadow-md border-none bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold">
+          <CardTitle className="text-xl text-blue-300 font-semibold">
             Meetings Management
           </CardTitle>
           <Button
@@ -125,6 +138,7 @@ export default function MeetingsPage() {
               setSelectedMeeting(null);
               setIsMeetingModalOpen(true);
             }}
+            className="bg-green-700 hover:bg-green-800"
           >
             Add New Meeting
           </Button>
@@ -136,9 +150,10 @@ export default function MeetingsPage() {
               id="searcher"
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              className="max-w-sm"
             />
             <select
-              className="border rounded p-1"
+              className="border rounded p-1 bg-gray-700"
               id="statusFilterer"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -153,36 +168,51 @@ export default function MeetingsPage() {
 
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Quorum</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+              <TableRow className="bg-gray-800 hover:bg-gray-700">
+                <TableHead className="text-gray-200 font-bold">ID</TableHead>
+                <TableHead className="text-gray-200 font-bold">Title</TableHead>
+                <TableHead className="text-gray-200 font-bold">Date</TableHead>
+                <TableHead className="text-gray-200 font-bold">
+                  Location
+                </TableHead>
+                <TableHead className="text-gray-200 font-bold">
+                  Quorum
+                </TableHead>
+                <TableHead className="text-gray-200 font-bold">
+                  Status
+                </TableHead>
+                <TableHead className="text-gray-200 font-bold">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading && (
-                <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
-                    Loading...
+              {fetching && (
+                <TableRow className="bg-gray-800 hover:bg-gray-700">
+                  <TableCell colSpan={10} className="h-24 text-center">
+                    <LoaderRotatingLines
+                      style={{
+                        h: "30",
+                        w: "30",
+                        color: "#9cc5f5",
+                        strokeWidth: 4,
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               )}
-              {meetings.length === 0 && (
-                <TableRow>
+              {meetings.length === 0 && !loading && (
+                <TableRow className="bg-gray-800 hover:bg-gray-700">
                   <TableCell
                     colSpan={7}
-                    className="h-24 text-center text-red-700"
+                    className="h-24 text-center text-base text-red-900"
                   >
                     No meetings found.
                   </TableCell>
                 </TableRow>
               )}
               {meetings.map((m) => (
-                <TableRow key={m.id} className="hover:bg-gray-50">
+                <TableRow key={m.id} className="bg-gray-800 hover:bg-gray-700">
                   <TableCell>{m.id}</TableCell>
                   <TableCell>{m.title}</TableCell>
                   <TableCell>
@@ -197,9 +227,16 @@ export default function MeetingsPage() {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button size="sm">Actions</Button>
+                        <Button
+                          size="sm"
+                          className={`hover:cursor-pointer bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900 ${
+                            loading ? "pointer-events-none" : ""
+                          }`}
+                        >
+                          Actions
+                        </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent>
+                      <DropdownMenuContent className="backdrop-blur-sm bg-transparent border-cyan-400 text-neutral-50">
                         {/* Edit */}
                         <DropdownMenuItem
                           onClick={() => {
@@ -207,6 +244,7 @@ export default function MeetingsPage() {
                             setSelectedMeeting(m);
                             setIsMeetingModalOpen(true);
                           }}
+                          className="md:rounded-none border-b border-cyan-400"
                         >
                           Edit
                         </DropdownMenuItem>
@@ -215,6 +253,7 @@ export default function MeetingsPage() {
                         {m.status === "DRAFT" && (
                           <DropdownMenuItem
                             onClick={() => handleOpenMeeting(m.id)}
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Open
                           </DropdownMenuItem>
@@ -224,6 +263,7 @@ export default function MeetingsPage() {
                         {(m.status === "OPEN" || m.status === "VOTINGOPEN") && (
                           <DropdownMenuItem
                             onClick={() => handleCloseMeeting(m.id)}
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Close
                           </DropdownMenuItem>
@@ -236,6 +276,7 @@ export default function MeetingsPage() {
                               setAttendanceMeeting(m);
                               setIsAttendanceOpen(true);
                             }}
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Attendance
                           </DropdownMenuItem>
@@ -247,6 +288,7 @@ export default function MeetingsPage() {
                             onClick={() =>
                               (window.location.href = `/meetings/${m.id}/attendance/live`)
                             }
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Live Attendance
                           </DropdownMenuItem>
@@ -259,6 +301,7 @@ export default function MeetingsPage() {
                               setNomineeMeeting(m);
                               setIsNomineeOpen(true);
                             }}
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Nominees
                           </DropdownMenuItem>
@@ -270,6 +313,7 @@ export default function MeetingsPage() {
                             onClick={() =>
                               (window.location.href = `/meetings/${m.id}/voting-cards`)
                             }
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Voting Cards
                           </DropdownMenuItem>
@@ -281,6 +325,7 @@ export default function MeetingsPage() {
                             onClick={() =>
                               (window.location.href = `/meetings/${m.id}/vote`)
                             }
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Voting
                           </DropdownMenuItem>
@@ -293,6 +338,7 @@ export default function MeetingsPage() {
                             onClick={() =>
                               (window.location.href = `/meetings/${m.id}/live`)
                             }
+                            className="md:rounded-none border-b border-cyan-400"
                           >
                             Live Results
                           </DropdownMenuItem>
@@ -302,7 +348,7 @@ export default function MeetingsPage() {
                         {m.status === "DRAFT" && (
                           <DropdownMenuItem
                             onClick={() => handleDeleteMeeting(m.id)}
-                            className="text-red-400"
+                            className="text-red-400 md:rounded-none border-b border-cyan-400"
                           >
                             DELETE
                           </DropdownMenuItem>

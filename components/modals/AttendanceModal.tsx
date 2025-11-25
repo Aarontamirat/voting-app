@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
+import { Trash2 } from "lucide-react";
 
 interface MeetingShort {
   id: string;
@@ -151,19 +152,40 @@ export default function AttendanceModal({
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!meeting) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/meetings/${meeting.id}/attendance/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete attendance");
+      toast.success("Attendance deleted");
+      await fetchData();
+      onSuccess();
+    } catch (err: any) {
+      toast.error([err.message || "Error deleting attendance"]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!meeting) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-4xl sm:max-w-[40vw] max-h-[90vh] flex flex-col bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle>Attendance — {meeting.title}</DialogTitle>
-          <DialogDescription>Record attendance here</DialogDescription>
+          <DialogDescription className="text-neutral-200">
+            Record attendance here
+          </DialogDescription>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1 px-1 space-y-4">
           {quorumInfo && (
-            <div className="p-3 bg-gray-50 rounded text-sm">
+            <div className="p-3 rounded text-sm">
               <div>
                 <strong>Total shares:</strong> {quorumInfo.totalShares}
               </div>
@@ -193,7 +215,7 @@ export default function AttendanceModal({
               placeholder="Enter shareholder ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
+              className="w-full placeholder:text-stone-400"
             />
 
             {searchTerm && (
@@ -202,22 +224,26 @@ export default function AttendanceModal({
                   filteredShareholders.map((s) => (
                     <div
                       key={s.id}
-                      className="flex justify-between items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                      className="flex justify-between items-center p-2 hover:bg-gray-700 rounded cursor-pointer"
                     >
                       <div>
-                        <div className="font-medium text-sm">{s.name}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-medium text-neutral-100 text-sm">
+                          {s.name}
+                        </div>
+                        <div className="text-xs text-neutral-300">
                           {s.id} — {s.shareValue} shares
                         </div>
                       </div>
                       <Checkbox
                         checked={selectedIds.includes(s.id)}
                         onCheckedChange={() => toggleSelected(s.id)}
+                        className="w-5 h-5 hover:cursor-pointer data-[state=checked]:bg-emerald-500 data-[state=checked]:border-neutral-100"
+                        disabled={loading}
                       />
                     </div>
                   ))
                 ) : (
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-300">
                     No shareholders found.
                   </div>
                 )}
@@ -279,7 +305,7 @@ export default function AttendanceModal({
               <select
                 value={existingRepId}
                 onChange={(e) => setExistingRepId(e.target.value)}
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded bg-gray-700"
               >
                 <option value="">Select representative</option>
                 {representatives.map((r) => (
@@ -295,7 +321,7 @@ export default function AttendanceModal({
               <select
                 value={repShareholderId}
                 onChange={(e) => setRepShareholderId(e.target.value)}
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded bg-gray-700"
               >
                 <option value="">Select shareholder representative</option>
                 {shareholders.map((s) => (
@@ -309,14 +335,16 @@ export default function AttendanceModal({
             {repType === "new" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <Input
-                  placeholder="Representative full name"
+                  placeholder="Representative Full Name"
                   value={newRepName}
                   onChange={(e) => setNewRepName(e.target.value)}
+                  className="placeholder:text-stone-400"
                 />
                 <Input
                   placeholder="Representative ID"
                   value={newRepId}
                   onChange={(e) => setNewRepId(e.target.value)}
+                  className="placeholder:text-stone-400"
                 />
               </div>
             )}
@@ -331,12 +359,23 @@ export default function AttendanceModal({
               ) : (
                 <ul className="space-y-1 text-sm">
                   {attendance.map((a) => (
-                    <li key={a.id} className="flex justify-between">
+                    <li
+                      key={a.id}
+                      className="flex justify-between items-center px-2 shadow-sm rounded-sm hover:bg-gray-800 hover:cursor-pointer"
+                    >
                       <div>
                         {a.shareholderName} ({a.shareValue})
                       </div>
-                      <div className="text-gray-500">
+                      <div className="text-neutral-300 flex items-center sm:gap-4">
                         {a.representedByName ?? "-"}
+                        <Button
+                          variant={"outline"}
+                          className="w-8 h-8 bg-transparent text-neutral-100 hover:text-red-500 border-none hover:bg-transparent hover:cursor-pointer duration-300 transition"
+                          onClick={() => handleDelete(a.id)}
+                          disabled={loading}
+                        >
+                          <Trash2 />
+                        </Button>
                       </div>
                     </li>
                   ))}
@@ -346,11 +385,20 @@ export default function AttendanceModal({
           </div>
         </div>
 
-        <div className="flex justify-end space-x-2 pt-4 border-t flex-shrink-0 bg-white">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+        <div className="flex justify-end space-x-2 pt-4 border-t flex-shrink-0">
+          <Button
+            variant="outline"
+            className="bg-gray-700"
+            onClick={onClose}
+            disabled={loading}
+          >
             Close
           </Button>
-          <Button onClick={handleAdd} disabled={loading}>
+          <Button
+            onClick={handleAdd}
+            disabled={loading}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
             {loading ? "Saving..." : "Add Attendance"}
           </Button>
         </div>

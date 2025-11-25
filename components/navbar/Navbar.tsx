@@ -4,18 +4,32 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X } from "lucide-react"; // lightweight icons
+import { Button } from "../ui/button";
+import { Bungee_Spice } from "next/font/google";
+
+const bungeeSpice = Bungee_Spice({
+  weight: ["400"],
+  style: ["normal"],
+  subsets: ["latin"],
+});
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("");
 
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
+    <nav className="sticky top-0 z-50 bg-gray-900 shadow-gray-700 shadow-md">
       <div className="max-w-7xl mx-auto pr-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* --- Left Section: Logo & Title --- */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
+            <Link
+              href="/"
+              className="flex items-center"
+              onClick={() => {
+                setSelectedTab("logoIcon");
+              }}
+            >
               <Image
                 src="/logo.svg"
                 width={150}
@@ -24,7 +38,12 @@ export const Navbar = () => {
                 priority
                 className="w-40 h-auto"
               />
-              <span className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+              <span
+                className={`text-xl font-semibold text-neutral-100 ${bungeeSpice.className}`}
+                onClick={() => {
+                  setSelectedTab("logoText");
+                }}
+              >
                 Voting System
               </span>
             </Link>
@@ -39,11 +58,21 @@ export const Navbar = () => {
               }}
               className={`${
                 selectedTab === "shareholders"
-                  ? "text-blue-600 dark:text-blue-400"
-                  : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              }`}
+                  ? "bg-gray-800"
+                  : "hover:bg-gray-800"
+              } rounded-md duration-300 transition-colors`}
             >
-              Shareholders
+              <Button
+                variant="link"
+                size={"default"}
+                className={`${
+                  selectedTab === "shareholders"
+                    ? "text-blue-300"
+                    : "text-neutral-100"
+                } text-base hover:no-underline`}
+              >
+                Shareholders
+              </Button>
             </Link>
             <Link
               href="/meetings"
@@ -51,12 +80,20 @@ export const Navbar = () => {
                 setSelectedTab("meetings");
               }}
               className={`${
-                selectedTab === "meetings"
-                  ? "text-blue-600 dark:text-blue-400"
-                  : "text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              }`}
+                selectedTab === "meetings" ? "bg-gray-800" : "hover:bg-gray-800"
+              } rounded-md duration-300 transition-colors`}
             >
-              Meetings
+              <Button
+                variant="link"
+                size={"default"}
+                className={`${
+                  selectedTab === "meetings"
+                    ? "text-blue-300"
+                    : "text-neutral-100"
+                } text-base hover:no-underline`}
+              >
+                Meetings
+              </Button>
             </Link>
           </div>
 
@@ -75,7 +112,7 @@ export const Navbar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
-              className="text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
+              className="text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               {isOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -89,20 +126,54 @@ export const Navbar = () => {
           isOpen ? "max-h-60" : "max-h-0"
         }`}
       >
-        <div className="px-4 pb-4 flex flex-col space-y-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div className=" mt-4 flex flex-col space-y-1 bg-gray-900 shadow-gray-700 shadow-md">
           <Link
             href="/shareholders"
-            className="block px-2 py-2 rounded-md text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-            onClick={() => setIsOpen(false)}
+            className={`${
+              selectedTab === "shareholders"
+                ? "bg-gray-800"
+                : "hover:bg-gray-800 bg-gray-800"
+            } md:rounded-md px-2 py-4 duration-300 transition-colors`}
+            onClick={() => {
+              setIsOpen(false);
+              setSelectedTab("shareholders");
+            }}
           >
-            Shareholders
+            <Button
+              variant="link"
+              size={"default"}
+              className={`${
+                selectedTab === "shareholders"
+                  ? "text-blue-300"
+                  : "text-neutral-100"
+              } text-base hover:no-underline`}
+            >
+              Shareholders
+            </Button>
           </Link>
           <Link
             href="/meetings"
-            className="block px-2 py-2 rounded-md text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-            onClick={() => setIsOpen(false)}
+            className={`${
+              selectedTab === "meetings"
+                ? "bg-gray-800"
+                : "hover:bg-gray-800 bg-gray-800"
+            } md:rounded-md px-2 py-4 duration-300 transition-colors`}
+            onClick={() => {
+              setIsOpen(false);
+              setSelectedTab("meetings");
+            }}
           >
-            Meetings
+            <Button
+              variant="link"
+              size={"default"}
+              className={`${
+                selectedTab === "meetings"
+                  ? "text-blue-300"
+                  : "text-neutral-100"
+              } text-base hover:no-underline`}
+            >
+              Meetings
+            </Button>
           </Link>
           {/* <Link
             href="/login"

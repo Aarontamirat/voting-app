@@ -15,6 +15,8 @@ export default function LiveAttendancePage() {
   const [totalShareholders, setTotalShareholders] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [newArrivals, setNewArrivals] = useState<any[]>([]);
+  const prevAttendanceRef = useRef<any[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -36,6 +38,30 @@ export default function LiveAttendancePage() {
         setTotalShareholders(
           shareholdersData.total || shareholdersData.length || 0
         );
+
+        // Detect newly arrived attendees
+        if (prevAttendanceRef.current.length > 0) {
+          const prevIds = new Set(
+            prevAttendanceRef.current.map((a: any) => a.id)
+          );
+          const newOnes = attendanceData.attendance.filter(
+            (a: any) => !prevIds.has(a.id)
+          );
+
+          if (newOnes.length > 0) {
+            // add them to newArrivals
+            setNewArrivals((prev) => [...prev, ...newOnes]);
+
+            // remove them after 4 seconds
+            setTimeout(() => {
+              setNewArrivals((prev) =>
+                prev.filter((x) => !newOnes.includes(x))
+              );
+            }, 4000);
+          }
+        }
+
+        prevAttendanceRef.current = attendanceData.attendance;
       } catch (err: any) {
         toast.error(err.message);
       }
@@ -81,6 +107,15 @@ export default function LiveAttendancePage() {
         quorumMet ? "via-[#011604]" : "via-gray-950 "
       } to-gray-800 text-blue-900 py-8 px-6`}
     >
+      {/* 🔳 BACKGROUND IMAGE */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 pointer-events-none"
+        style={{ backgroundImage: "url('/bg-live.png')" }}
+      />
+
+      {/* 🔳 DARK OVERLAY TO MAKE IT DIM */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -93,7 +128,7 @@ export default function LiveAttendancePage() {
               የአቴንዳንስ መከታተያ (ቀጥታ)
             </h1>
 
-            <p className="text-cyan-600 mt-6 uppercase tracking-widest text-sm sm:text-base md:text-lg lg:text-xl">
+            <p className="text-neutral-50 mt-6 uppercase tracking-widest text-sm sm:text-base md:text-lg lg:text-xl">
               የአሁን ሰዓት ባለአክሲዮኖች ተሳትፎ ዕይታ
             </p>
           </div>
@@ -104,13 +139,7 @@ export default function LiveAttendancePage() {
                 aria-pressed={isFullScreen}
                 className="bg-transparent backdrop-blur-md border-2 border-blue-900 shadow-xl rounded-2xl text-center hover:shadow-2xl hover:shadow-blue-900/20 transition"
               >
-                {isFullScreen ? "ከሙሉ መስኮት ውጣ (F)" : "ሙሉ መስኮት (F)"}
-              </Button>
-              <Button
-                onClick={() => location.reload()}
-                className="bg-transparent backdrop-blur-md border-2 border-blue-900 shadow-xl rounded-2xl text-center hover:shadow-2xl hover:shadow-blue-900/20 transition"
-              >
-                ማደስ
+                {isFullScreen ? "Esc" : "F"}
               </Button>
             </div>
           </div>
@@ -137,6 +166,7 @@ export default function LiveAttendancePage() {
 
             {/* Circular Gauge */}
             <CircularProgressbar
+              className="font-mono"
               value={progressPct}
               text={`${
                 progressPct < 10
@@ -175,9 +205,65 @@ export default function LiveAttendancePage() {
             }`}
           >
             {quorumMet
-              ? "ምልአተ ጉባኤ ሞልቷል — ስብሰባው ለመካሄድ ዝግጁ ነው"
-              : "ተጨማሪ ተሳታፊዎችን በመጠበቅ ላይ ..."}
+              ? "Meeting Quorum Reached"
+              : "Waiting for more Attendees ..."}
           </motion.p>
+        </div>
+
+        {/* FLOATING WELCOME MESSAGES */}
+        <div className="absolute top-70 left-1/5 -translate-x-1/2 z-50 pointer-events-none">
+          <AnimatePresence>
+            {newArrivals.map((p) => (
+              <motion.div
+                key={p.id}
+                initial={{
+                  opacity: 0,
+                  y: 30,
+                  scale: 0.85,
+                  filter: "blur(5px)",
+                }}
+                animate={{
+                  opacity: [0, 1, 1, 0],
+                  y: [-10, -60, -120, -200],
+                  x: [0, -10, 10, -5, 0], // little smoke drift
+                  scale: [0.8, 1, 1.05, 1],
+                  filter: ["blur(2px)", "blur(0px)", "blur(0px)", "blur(4px)"],
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 4.2, ease: "easeOut" }}
+                className="relative w-fit mx-auto"
+              >
+                {/* The animated wavy blob background */}
+                <svg
+                  className="absolute inset-0 w-full h-full -z-10"
+                  viewBox="0 0 200 80"
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    fill="rgba(255,255,255,0.15)"
+                    stroke="rgba(255,255,255,0.25)"
+                    strokeWidth="2"
+                    animate={{
+                      d: [
+                        "M10,20 Q50,0 100,20 T190,20 Q150,60 100,50 T10,20",
+                        "M10,30 Q50,10 100,25 T190,35 Q150,70 100,55 T10,30",
+                        "M10,20 Q50,0 100,20 T190,20 Q150,60 100,50 T10,20",
+                      ],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </svg>
+
+                <div className="px-8 py-4 text-white text-2xl font-bold select-none backdrop-blur-xl">
+                  Welcome {p.shareholderName}!
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* STATS */}
@@ -188,17 +274,17 @@ export default function LiveAttendancePage() {
           className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-16"
         >
           {[
-            { label: "አጠቃላይ ሼሮች", value: totalShares },
-            { label: "አጠቃላይ ባለአክስዮኖች", value: totalShareholders },
-            { label: "ተሳታፊዎች", value: attendedCount },
-            { label: "የተሳታፊዎች አክስዮን ብዛት", value: attendedShares },
+            { label: "Total Shares", value: totalShares },
+            { label: "Total Shareholders", value: totalShareholders },
+            { label: "Attendees", value: attendedCount },
+            { label: "Total Attendee Shares", value: attendedShares },
           ].map((item, idx) => (
             <motion.div
               key={idx}
               whileHover={{ scale: 1.03 }}
               className="bg-transparent backdrop-blur-md border-2 border-blue-900 shadow-xl rounded-2xl p-6 text-center hover:shadow-2xl hover:shadow-blue-900/20 transition"
             >
-              <p className="sm:text-sm md:text-lg 2xl:text-2xl uppercase tracking-widest text-blue-400 whitespace-nowrap">
+              <p className="sm:text-sm md:text-lg 2xl:text-2xl uppercase 2xl:tracking-wide font-bold text-blue-400 whitespace-nowrap">
                 {item.label}
               </p>
 
@@ -214,31 +300,5 @@ export default function LiveAttendancePage() {
         </motion.div>
       </motion.div>
     </div>
-
-    // {/* ATTENDEE LIST
-    // <div className="mt-12 bg-white/70 border border-blue-100 rounded-2xl shadow-md p-8 max-h-[60vh] overflow-y-auto">
-    //   <h2 className="text-xl font-semibold text-blue-700 mb-6">
-    //     የተሳታፊዎች ዝርዝር (ቀጥታ)
-    //   </h2>
-    //   <AnimatePresence>
-    //     {attendance.map((a: any, i: number) => (
-    //       <motion.div
-    //         key={a.id}
-    //         initial={{ opacity: 0, y: 10 }}
-    //         animate={{ opacity: 1, y: 0 }}
-    //         exit={{ opacity: 0, y: -10 }}
-    //         transition={{ delay: i * 0.02 }}
-    //         className="flex justify-between items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-sky-50 rounded-lg border border-blue-100 mb-2"
-    //       >
-    //         <span className="text-sm font-medium text-gray-700">
-    //           {a.shareholderNameAm}
-    //         </span>
-    //         <span className="text-sm text-sky-600 font-mono">
-    //           {Number(a.shareValue).toLocaleString()} ሼሮች
-    //         </span>
-    //       </motion.div>
-    //     ))}
-    //   </AnimatePresence>
-    // </div> */}
   );
 }

@@ -33,6 +33,12 @@ export async function GET(
       orderBy: { createdAt: "asc" },
     });
 
+    // attendees count
+    const attendeesCount = attendanceList.length;
+
+    // total shareholders count
+    const totalShareholdersCount = await prisma.shareholder.count();
+
     const totalSharesAgg = await prisma.shareholder.aggregate({
       _sum: { shareValue: true },
     });
@@ -66,6 +72,8 @@ export async function GET(
       attendedShares,
       quorumMet,
       attendance: formatted,
+      attendeesCount,
+      totalShareholdersCount,
     });
   } catch (err: any) {
     return NextResponse.json(

@@ -139,7 +139,7 @@ export default function ShareholderModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <DialogHeader>
           <DialogTitle>
             {mode === "add"
@@ -172,13 +172,21 @@ export default function ShareholderModal({
             {mode === "add" && (
               <div>
                 <label className="block text-sm font-medium mb-1">ID</label>
-                <Input value={id} onChange={(e) => setId(e.target.value)} />
+                <Input
+                  value={id}
+                  onChange={(e) => setId(e.target.value)}
+                  className="bg-gray-800"
+                />
               </div>
             )}
 
             <div>
               <label className="block text-sm font-medium mb-1">Name</label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="bg-gray-800"
+              />
             </div>
 
             <div>
@@ -188,12 +196,17 @@ export default function ShareholderModal({
               <Input
                 value={nameAm}
                 onChange={(e) => setNameAm(e.target.value)}
+                className="bg-gray-800"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-1">Phone</label>
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="bg-gray-800"
+              />
             </div>
 
             <div>
@@ -201,6 +214,7 @@ export default function ShareholderModal({
               <Input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+                className="bg-gray-800"
               />
             </div>
 
@@ -211,15 +225,25 @@ export default function ShareholderModal({
               <Input
                 value={shareValue}
                 onChange={(e) => setShareValue(e.target.value)}
+                className="bg-gray-800"
               />
             </div>
           </div>
         )}
         <DialogFooter className="mt-4 flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+          <Button
+            variant="outline"
+            className="bg-gray-700"
+            onClick={onClose}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={loading}>
+          <Button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+          >
             {loading ? "Saving..." : "Save"}
           </Button>
         </DialogFooter>

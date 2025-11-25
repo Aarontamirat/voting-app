@@ -27,11 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800`}
       >
         <Navbar />
         {children}
-        <Toaster 
+        <Toaster
           position="top-center"
           richColors
           duration={3000} // 3 seconds timeout for the toast messages

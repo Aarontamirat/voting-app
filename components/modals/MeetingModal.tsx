@@ -122,12 +122,12 @@ export default function MeetingModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <DialogHeader>
           <DialogTitle>
             {mode === "add" ? "Add New Meeting" : "Edit Meeting"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-neutral-400">
             {mode === "add" ? "Add a new meeting" : "Edit a meeting"}
           </DialogDescription>
         </DialogHeader>
@@ -135,7 +135,11 @@ export default function MeetingModal({
         <div className="space-y-4 mt-2">
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-gray-800"
+            />
           </div>
 
           <div>
@@ -146,6 +150,7 @@ export default function MeetingModal({
               type="datetime-local"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              className="bg-gray-800"
             />
           </div>
 
@@ -154,12 +159,17 @@ export default function MeetingModal({
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              className="bg-gray-800"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Quorum</label>
-            <Input value={quorum} onChange={(e) => setQuorum(e.target.value)} />
+            <Input
+              value={quorum}
+              onChange={(e) => setQuorum(e.target.value)}
+              className="bg-gray-800"
+            />
           </div>
 
           <div>
@@ -173,6 +183,7 @@ export default function MeetingModal({
               id="firstPassersNumber"
               value={firstPassers}
               onChange={(e) => setFirstPassers(e.target.value)}
+              className="bg-gray-800"
             />
           </div>
 
@@ -187,6 +198,7 @@ export default function MeetingModal({
               id="secondPassersNumber"
               value={secondPassers}
               onChange={(e) => setSecondPassers(e.target.value)}
+              className="bg-gray-800"
             />
           </div>
 
@@ -196,7 +208,7 @@ export default function MeetingModal({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="border rounded p-1 w-full"
+                className="border rounded p-1 w-full bg-gray-800"
               >
                 <option value="DRAFT">DRAFT</option>
                 <option value="OPEN">Open</option>
@@ -208,13 +220,18 @@ export default function MeetingModal({
         </div>
 
         <DialogFooter className="mt-4 flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose} disabled={loading}>
+          <Button
+            variant="outline"
+            className="bg-gray-700"
+            onClick={onClose}
+            disabled={loading}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
           >
             {loading && (
               <svg

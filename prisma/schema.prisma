@@ -76,7 +76,7 @@ model Representative {
   phone         String?
   // if this representative *is* a shareholder, link (optional)
   shareholderId String?
-  shareholder   Shareholder? @relation(fields: [shareholderId], references: [id])
+  shareholder   Shareholder? @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -91,9 +91,9 @@ model Representation {
   representativeId String
   shareholderId    String
 
-  meeting        Meeting        @relation(fields: [meetingId], references: [id])
-  representative Representative @relation(fields: [representativeId], references: [id])
-  shareholder    Shareholder    @relation(fields: [shareholderId], references: [id])
+  meeting        Meeting        @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  representative Representative @relation(fields: [representativeId], references: [id], onDelete: Cascade)
+  shareholder    Shareholder    @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
 
   @@unique([meetingId, representativeId, shareholderId])
 }
@@ -106,9 +106,9 @@ model Attendance {
   representativeName String? // external rep
   createdAt          DateTime @default(now())
 
-  meeting       Meeting         @relation(fields: [meetingId], references: [id])
-  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id])
-  representedBy Representative? @relation(fields: [representedById], references: [id])
+  meeting       Meeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
+  representedBy Representative? @relation(fields: [representedById], references: [id], onDelete: Cascade)
 
   @@unique([meetingId, shareholderId]) // only one attendance row per shareholder per meeting
 }
@@ -124,8 +124,8 @@ model Nominee {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  shareholder Shareholder @relation(fields: [shareholderId], references: [id])
-  meeting     Meeting     @relation(fields: [meetingId], references: [id])
+  shareholder Shareholder @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
+  meeting     Meeting     @relation(fields: [meetingId], references: [id], onDelete: Cascade)
   votes       Vote[]
 }
 
@@ -137,8 +137,8 @@ model Vote {
   weight    Float
   createdAt DateTime @default(now())
 
-  meetings Meeting @relation(fields: [meetingId], references: [id])
-  nominee  Nominee @relation(fields: [nomineeId], references: [id])
+  meetings Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  nominee  Nominee @relation(fields: [nomineeId], references: [id], onDelete: Cascade)
 
   @@unique([meetingId, nomineeId, voterId]) // a shareholder can vote at most once per nominee per meeting
 }
