@@ -54,6 +54,8 @@ model Meeting {
   status        MeetingStatus @default(DRAFT)
   firstPassers  Int?
   secondPassers Int?
+  snapshotTotalShares Decimal?
+  snapshotTotalHolders Int?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -104,11 +106,20 @@ model Attendance {
   shareholderId      String
   representedById    String? // another shareholder
   representativeName String? // external rep
+
+  // SNAPSHOT FIELDS
+  snapshotName String
+  snapshotNameAm String?
+  snapshotPhone String?
+  snapshotAddress String?
+  snapshotShareValue Decimal @db.Decimal(30, 6)
+
+
   createdAt          DateTime @default(now())
 
-  meeting       Meeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
-  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
-  representedBy Representative? @relation(fields: [representedById], references: [id], onDelete: Cascade)
+  meeting       Meeting         @relation(fields: [meetingId], references: [id])
+  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id])
+  representedBy Representative? @relation(fields: [representedById], references: [id])
 
   @@unique([meetingId, shareholderId]) // only one attendance row per shareholder per meeting
 }
@@ -137,8 +148,12 @@ model Vote {
   weight    Float
   createdAt DateTime @default(now())
 
-  meetings Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
-  nominee  Nominee @relation(fields: [nomineeId], references: [id], onDelete: Cascade)
+  // SNAPSHOT FIELDS
+  snapshotVoterName String
+  snapshotVoterShareValue Decimal @db.Decimal(30, 6)
+
+  meetings Meeting @relation(fields: [meetingId], references: [id])
+  nominee  Nominee @relation(fields: [nomineeId], references: [id])
 
   @@unique([meetingId, nomineeId, voterId]) // a shareholder can vote at most once per nominee per meeting
 }

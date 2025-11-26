@@ -211,7 +211,7 @@ export default function MeetingModal({
                 className="border rounded p-1 w-full bg-gray-800"
               >
                 <option value="DRAFT">DRAFT</option>
-                <option value="OPEN">Open</option>
+                {/* <option value="OPEN">Open</option> */}
                 <option value="CLOSED">Closed</option>
                 <option value="VOTINGOPEN">Voting Open</option>
               </select>
