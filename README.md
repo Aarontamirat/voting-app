@@ -1,11 +1,11 @@
-# 🌌 **Weighted Voting & Shareholder Management System**
+# **Weighted Voting & Shareholder Management System**
 
 A futuristic, real-time, share‑weighted voting platform designed for
 modern organizations.
 
 ---
 
-## ✨ **Overview**
+## **Overview**
 
 This system empowers organizations to run transparent, fair, and
 weighted elections where each shareholder's voting power corresponds to
@@ -16,34 +16,34 @@ Created with precision and elegance by **Aaron Tamirat**.
 
 ---
 
-## 🚀 **Key Features**
+## **Key Features**
 
-### 🧾 **Shareholder Registry**
+### **Shareholder Registry**
 
 - Add, update, and manage shareholders\
 - Automatic share‑value‑based weighting\
 - Fast lookup and smart search
 
-### 📋 **Meeting Management**
+### **Meeting Management**
 
 - Create and manage meetings\
 - Track attendance\
 - Auto‑generated voter lists
 
-### 🗳️ **Weighted Voting System**
+### **Weighted Voting System**
 
 - Live animated voting dashboard\
 - Share‑based vote calculations\
 - Real-time updates with futuristic visuals\
 - Circular animated progress rings
 
-### 🧑‍💼 **Nominee Management**
+### **Nominee Management**
 
 - Add nominees linked to shareholders\
 - Prevent double voting\
 - Disable already‑voted options
 
-### 🖨️ **Printable Voting Cards**
+### **Printable Voting Cards**
 
 - Compact, elegant voting cards\
 - 2 cards per page for paper efficiency\
@@ -54,7 +54,7 @@ Created with precision and elegance by **Aaron Tamirat**.
   - Nominee checkboxes\
   - Signature line
 
-### 📊 **Reports & Insights**
+### **Reports & Insights**
 
 - Total shares registered\
 - Shares present in meeting\
@@ -63,7 +63,7 @@ Created with precision and elegance by **Aaron Tamirat**.
 
 ---
 
-## 🛠️ **Tech Stack**
+## **Tech Stack**
 
 Layer Technology
 
@@ -80,15 +80,15 @@ Layer Technology
 
 ---
 
-## 🔥 **Live Voting Dashboard Preview**
+## **Live Voting Dashboard Preview**
 
-    ○ ● ⚡ Futuristic animated dashboard
+    ○ ● Futuristic animated dashboard
     ○ ● Live weight updates
     ○ ● Auto-sorting by vote count
 
 ---
 
-## 🎨 **Design Philosophy**
+## **Design Philosophy**
 
 > _"Clean, futuristic, minimalist --- built for large LED displays."_\
 > Light backgrounds, glowing accents, smooth animations, and a
@@ -96,7 +96,7 @@ Layer Technology
 
 ---
 
-## 📁 **Project Structure**
+## **Project Structure**
 
     /app
       /meetings
@@ -108,7 +108,7 @@ Layer Technology
 
 ---
 
-## 👨‍💻 **Author**
+## **Author**
 
 **Aaron Tamirat**\
 Full-stack Developer • System Architect\
@@ -116,7 +116,7 @@ Building modern enterprise tools with code and creativity.
 
 ---
 
-## ⭐ **Support & Showcase**
+## **Support & Showcase**
 
 If you use this project in your organization, give credit to keep the
 ecosystem inspiring and motivating.

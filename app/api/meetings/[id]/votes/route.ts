@@ -7,6 +7,11 @@ const SubmitVotesSchema = z.object({
   nomineeIds: z.array(z.string().min(1)).min(1),
 });
 
+type AttendedData = {
+  snapshotVoterName?: string;
+  snapshotVoterShareValue?: number;
+};
+
 export async function POST(
   req: Request,
   context: { params: Promise<{ id: string }> }
@@ -38,6 +43,7 @@ export async function POST(
 
     let weight = 0;
     let isEligible = false;
+    let attendedData: AttendedData = {};
 
     if (possibleRep) {
       // --- If voter is a representative ---
@@ -100,7 +106,13 @@ export async function POST(
         where: { meetingId, shareholderId: parsed.voterId },
       });
 
-      if (attended) isEligible = true;
+      if (attended) {
+        isEligible = true;
+        attendedData = {
+          snapshotVoterName: attended.snapshotName,
+          snapshotVoterShareValue: Number(attended.snapshotShareValue),
+        };
+      }
     }
 
     // Reject if not eligible
@@ -146,6 +158,8 @@ export async function POST(
             nomineeId,
             voterId: parsed.voterId,
             weight,
+            snapshotVoterName: attendedData.snapshotVoterName ?? "",
+            snapshotVoterShareValue: attendedData.snapshotVoterShareValue ?? 0,
           },
         });
         created.push(c);
