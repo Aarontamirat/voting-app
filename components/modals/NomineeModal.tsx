@@ -126,17 +126,19 @@ export default function NomineeModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="DialogContent max-w-lg max-h-[80vh] overflow-y-auto">
+      <DialogContent className="DialogContent max-w-lg max-h-[80vh] overflow-y-auto bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <DialogHeader>
           <DialogTitle>Nominees - {meeting?.title}</DialogTitle>
-          <DialogDescription>Manage nominees here</DialogDescription>
+          <DialogDescription className="text-neutral-300">
+            Manage nominees here
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-2">
           {/* Existing nominees list */}
           <div className="space-y-2">
             {nominees.length === 0 && (
-              <p className="text-sm text-gray-500 italic">No nominees yet</p>
+              <p className="text-sm text-gray-300 italic">No nominees yet</p>
             )}
             {nominees.map((n) => (
               <div
@@ -162,6 +164,7 @@ export default function NomineeModal({
                       setNewDescription(isOpen ? "" : n.description);
                       setEditOpen(isOpen ? false : true);
                     }}
+                    className="hover:cursor-pointer bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
                   >
                     Edit
                   </Button>
@@ -192,7 +195,10 @@ export default function NomineeModal({
               onValueChange={setSelectedShareholder}
             >
               <SelectTrigger className="w-full mt-1">
-                <SelectValue placeholder="Select Shareholder" />
+                <SelectValue
+                  placeholder="Select Shareholder"
+                  className="placeholder:text-neutral-100"
+                />
               </SelectTrigger>
               <SelectContent className="">
                 {shareholders.map((s) => (
@@ -213,8 +219,8 @@ export default function NomineeModal({
                 <SelectValue placeholder="Select Type" />
               </SelectTrigger>
               <SelectContent className="">
-                <SelectItem value="first">First</SelectItem>
-                <SelectItem value="second">Second</SelectItem>
+                <SelectItem value="first">Type-1</SelectItem>
+                <SelectItem value="second">Type-2</SelectItem>
               </SelectContent>
             </Select>
 
@@ -225,20 +231,45 @@ export default function NomineeModal({
               onChange={(e) => setNewDescription(e.target.value)}
               className="mt-2"
             />
-
-            <Button className="mt-2" onClick={handleAdd} disabled={loading}>
-              {editOpen
-                ? "Update Nominee"
-                : loading
-                ? "Adding..."
-                : "Add Nominee"}
-            </Button>
           </div>
         </div>
 
-        <DialogFooter className="mt-4 flex justify-end">
-          <Button variant="outline" onClick={onClose}>
+        <DialogFooter className="mt-4 flex justify-end items-center">
+          <Button variant="outline" onClick={onClose} className="bg-gray-700">
             Close
+          </Button>
+          <Button
+            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            {loading && (
+              <svg
+                className="animate-spin h-4 w-4 text-cyan-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            )}
+            {editOpen
+              ? "Update Nominee"
+              : loading
+              ? "Adding..."
+              : "Add Nominee"}
           </Button>
         </DialogFooter>
       </DialogContent>

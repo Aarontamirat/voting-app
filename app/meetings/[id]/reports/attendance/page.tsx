@@ -14,10 +14,12 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AttendanceReport() {
   const [loading, setLoading] = useState(false);
+  const [loadingDownload, setLoadingDownload] = useState(false);
   const [data, setData] = useState<any>({
     meetingStatus: "",
     quorumPct: 0,
@@ -77,7 +79,7 @@ export default function AttendanceReport() {
 
   const generatePDF = async () => {
     try {
-      setLoading(true);
+      setLoadingDownload(true);
       const doc = new jsPDF();
 
       // Path to the image
@@ -140,7 +142,7 @@ export default function AttendanceReport() {
       console.error("generatePDF error:", err);
       toast.error(err.message || "Failed generating PDF");
     } finally {
-      setLoading(false);
+      setLoadingDownload(false);
     }
   };
 
@@ -149,11 +151,11 @@ export default function AttendanceReport() {
       <Card className="shadow-md border-none bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
           <CardTitle className="space-y-4">
-            <div className="text-2xl text-blue-300 font-semibold">
+            <div className="text-2xl text-blue-400 font-semibold">
               Shareholders Management
             </div>
             {/* Summary Section */}
-            <div className="grid grid-cols-2 gap-4 mb-8 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8 ">
               <SummaryCard label="Status" value={meetingStatus} />
               <SummaryCard label="Quorum (%)" value={`${quorumPct}%`} />
               <SummaryCard label="Total Shares" value={totalShares} />
@@ -179,7 +181,9 @@ export default function AttendanceReport() {
             variant={"outline"}
             size={"lg"}
             className="bg-transparent border-violet-500 text-violet-400 hover:bg-violet-800 hover:text-neutral-100 duration-300 transition"
+            disabled={loading || loadingDownload}
           >
+            {loadingDownload && <Loader2Icon className="animate-spin" />}
             Generate PDF
           </Button>
         </CardHeader>
@@ -187,8 +191,8 @@ export default function AttendanceReport() {
         <CardContent>
           {/* Attendance Table */}
           <Table className="border-spacing-x-2 border-spacing-y-1 shadow-lg">
-            <TableHeader className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 hover:bg-gray-800">
-              <TableRow>
+            <TableHeader className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 hover:bg-gray-900">
+              <TableRow className="bg-gray-800 hover:bg-gray-900">
                 <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
                   Id
                 </TableHead>
@@ -208,7 +212,7 @@ export default function AttendanceReport() {
             </TableHeader>
             <TableBody className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
               {loading && (
-                <TableRow>
+                <TableRow className="hover:bg-gray-800">
                   <TableCell
                     colSpan={5}
                     className="text-center bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 p-4 font-bold animate-pulse"
@@ -225,7 +229,7 @@ export default function AttendanceReport() {
                 </TableRow>
               )}
               {attendance.length === 0 && loading === false && (
-                <TableRow>
+                <TableRow className="hover:bg-gray-800">
                   <TableCell
                     colSpan={5}
                     className="text-center bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 p-4 font-bold "
@@ -237,7 +241,7 @@ export default function AttendanceReport() {
               {attendance.map((a: any) => (
                 <TableRow
                   key={a.id}
-                  className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 hover:bg-gray-800 transition duration-150 ease-in-out"
+                  className="hover:bg-gray-800 transition duration-150 ease-in-out"
                 >
                   <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
                     {a.shareholderId}
@@ -277,12 +281,16 @@ function SummaryCard({
     <div
       className={`p-4 rounded-lg shadow ${
         highlight
-          ? "bg-gray-800 text-gray-100 border-l-4 border-green-500"
-          : "bg-gray-800 text-gray-100"
+          ? "bg-gray-900 text-green-500 border-l-4 border-green-500"
+          : "bg-gray-900 text-blue-500"
       }`}
     >
-      <div className="text-gray-100 text-sm">{label}</div>
-      <div className="text-xl font-semibold">{value}</div>
+      <div className="text-blue-500 text-sm md:text-base lg:text-lg">
+        {label}
+      </div>
+      <div className="text-orange-500 text-sm md:text-base lg:text-lg font-semibold">
+        {value}
+      </div>
     </div>
   );
 }
