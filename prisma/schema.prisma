@@ -117,9 +117,9 @@ model Attendance {
 
   createdAt          DateTime @default(now())
 
-  meeting       Meeting         @relation(fields: [meetingId], references: [id])
-  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id])
-  representedBy Representative? @relation(fields: [representedById], references: [id])
+  meeting       Meeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  shareholder   Shareholder     @relation(fields: [shareholderId], references: [id], onDelete: Cascade)
+  representedBy Representative? @relation(fields: [representedById], references: [id], onDelete: Cascade)
 
   @@unique([meetingId, shareholderId]) // only one attendance row per shareholder per meeting
 }
@@ -152,8 +152,8 @@ model Vote {
   snapshotVoterName String
   snapshotVoterShareValue Decimal @db.Decimal(30, 6)
 
-  meetings Meeting @relation(fields: [meetingId], references: [id])
-  nominee  Nominee @relation(fields: [nomineeId], references: [id])
+  meetings Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  nominee  Nominee @relation(fields: [nomineeId], references: [id], onDelete: Cascade)
 
   @@unique([meetingId, nomineeId, voterId]) // a shareholder can vote at most once per nominee per meeting
 }
