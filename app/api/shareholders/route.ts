@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, Number(url.searchParams.get("page") ?? "1"));
   const take = Math.min(
-    100,
+    10000,
     Math.max(1, Number(url.searchParams.get("take") ?? "10"))
   );
 

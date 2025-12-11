@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Loader from "@/components/general/Loader";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/general/theme-toggle";
 
 const COLORS = [
   "#0B63E5",
@@ -142,14 +144,28 @@ export default function LiveVotingPresentation() {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-black/90 text-white px-6 pb-6 flex flex-col gap-6"
+      className="
+    min-h-screen px-6 pb-6 flex flex-col gap-6
+    bg-white dark:bg-gray-800
+    backdrop-blur-md
+    text-gray-900 dark:text-gray-100
+    transition-all
+  "
     >
-      <div className="flex items-center justify-between">
-        <div className="space-y-0 flex space-x-2 md:space-x-4 ">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-0">
+        <div className="space-y-1">
+          <h1
+            className="
+          text-2xl md:text-3xl font-extrabold tracking-tight
+          bg-gradient-to-r from-cyan-500 to-blue-600
+          dark:from-cyan-300 dark:to-blue-400
+          text-transparent bg-clip-text
+        "
+          >
             🗳 ምርጫ (ቀጥታ)
           </h1>
-          <p className="text-lg md:text-xl text-gray-200/90">
+          <p className="text-sm md:text-base text-gray-700 dark:text-gray-300">
             {meetingStatus === "CLOSED"
               ? "ምርጫ ዝግ ነው"
               : meetingStatus === "VOTINGOPEN"
@@ -158,32 +174,32 @@ export default function LiveVotingPresentation() {
           </p>
         </div>
 
-        <div className="text-right lg:flex items-center gap-4">
-          <div className="text-base lg:text-lg text-gray-300">
+        {/* STATS */}
+        <div className="flex items-center gap-4">
+          <div className="text-sm md:text-base text-gray-600 dark:text-gray-300">
             አጠቃላይ ያሉ አክስዮኖች
           </div>
-          <div className="text-base lg:text-lg font-bold">
+          <div className="text-sm md:text-base font-bold">
             {sharesAttended.toLocaleString()}
           </div>
         </div>
 
-        <div className="lg:flex gap-2">
-          <button
+        {/* ACTIONS */}
+        <div className="flex gap-2">
+          {isFullScreen && <ThemeToggle />}
+          <Button
             onClick={toggleFullScreen}
-            className="px-2 py-1 text-sm rounded-lg bg-white text-black font-semibold shadow-md"
+            className="dark:hover:bg-cyan-400 dark:text-cyan-400 dark:hover:text-gray-900 backdrop-blur-md 
+                bg-transparent border border-gray-800 dark:border-cyan-400 text-gray-900 hover:bg-gray-800 hover:text-neutral-100 rounded-2xl shadow-lg
+              "
             aria-pressed={isFullScreen}
           >
-            {isFullScreen ? "ከሙሉ መስኮት ውጣ (F)" : "ሙሉ መስኮት (F)"}
-          </button>
-          <button
-            onClick={() => location.reload()}
-            className="px-2 py-1 text-sm rounded-lg bg-gray-200/10 border border-gray-300/20 text-gray-100"
-          >
-            ማደስ
-          </button>
+            {isFullScreen ? "Esc" : "F"}
+          </Button>
         </div>
       </div>
 
+      {/* RESULTS LIST */}
       <div className="space-y-3">
         <AnimatePresence>
           {displayResults.map((r, idx) => {
@@ -205,25 +221,21 @@ export default function LiveVotingPresentation() {
                   layout: { type: "spring", stiffness: 120, damping: 18 },
                   duration: 0.35,
                 }}
-                className={`flex flex-col gap-2 p-3 rounded-xl shadow-md shadow-black/20 ${
-                  idx < firstPassers + secondPassers
-                    ? "bg-green-300/20"
-                    : "bg-white/5"
-                }`}
+                className={`
+              flex flex-col gap-2 p-4 rounded-xl 
+              shadow-xl border border-gray-200 dark:border-gray-700
+              bg-white/50 dark:bg-gray-800/50
+            `}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <motion.div
                       layout
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                      }}
                       className="text-sm md:text-base font-extrabold w-12 text-center"
                     >
                       {idx + 1}
                     </motion.div>
+
                     <div className="flex items-center gap-2">
                       <motion.div
                         layout
@@ -232,9 +244,14 @@ export default function LiveVotingPresentation() {
                         {r.nameAm}
                       </motion.div>
                       <span
-                        className={`px-1 text-xs rounded ${
-                          r.type === "first" ? "bg-blue-600" : "bg-green-600"
-                        }`}
+                        className={`
+                      px-1 text-xs rounded
+                      ${
+                        r.type === "first"
+                          ? "bg-blue-600 text-white"
+                          : "bg-green-600 text-white"
+                      }
+                    `}
                       >
                         {r.type === "first" ? "Type 1" : "Type 2"}
                       </span>
@@ -244,15 +261,13 @@ export default function LiveVotingPresentation() {
                   <div className="text-base md:text-lg font-semibold">
                     {weight.toLocaleString()}
                   </div>
+
                   <div className="text-right">
                     <div className="text-xl font-bold">{pct}%</div>
                   </div>
                 </div>
 
-                <motion.div
-                  layout
-                  className="w-full bg-white/8 h-3 rounded-full overflow-hidden"
-                >
+                <motion.div className="w-full bg-gray-300/20 dark:bg-gray-600/20 h-3 rounded-full overflow-hidden">
                   <motion.div
                     initial={false}
                     animate={{ width: `${Math.max(pct, 0)}%` }}
@@ -265,14 +280,6 @@ export default function LiveVotingPresentation() {
             );
           })}
         </AnimatePresence>
-      </div>
-
-      <div className="flex items-center justify-between text-sm text-gray-300">
-        <div>Auto-refresh: every 3s · Sorted by total shares</div>
-        <div>
-          Tip: press <span className="px-1 bg-white/10 rounded">F</span> to
-          toggle fullscreen
-        </div>
       </div>
 
       <div

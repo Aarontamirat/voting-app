@@ -126,33 +126,55 @@ export default function NomineeModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="DialogContent max-w-lg max-h-[80vh] overflow-y-auto bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
+      <DialogContent
+        className="
+      max-w-lg max-h-[80vh] overflow-y-auto
+      bg-gradient-to-br 
+      from-white via-slate-100 to-white 
+      dark:from-gray-700 dark:via-gray-800 dark:to-gray-700
+      text-gray-900 dark:text-gray-100
+      border border-slate-300 dark:border-gray-700
+    "
+      >
         <DialogHeader>
-          <DialogTitle>Nominees - {meeting?.title}</DialogTitle>
-          <DialogDescription className="text-neutral-300">
+          <DialogTitle>Nominees – {meeting?.title}</DialogTitle>
+
+          <DialogDescription className="text-gray-600 dark:text-gray-300">
             Manage nominees here
           </DialogDescription>
         </DialogHeader>
 
+        {/* BODY */}
         <div className="space-y-4 mt-2">
-          {/* Existing nominees list */}
+          {/* Existing nominees */}
           <div className="space-y-2">
             {nominees.length === 0 && (
-              <p className="text-sm text-gray-300 italic">No nominees yet</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                No nominees yet
+              </p>
             )}
+
             {nominees.map((n) => (
               <div
                 key={n.id}
-                className="border p-2 rounded flex justify-between items-center"
+                className="
+              border border-slate-300 dark:border-gray-700 
+              bg-white dark:bg-gray-800 
+              p-3 rounded-lg 
+              flex justify-between items-center
+            "
               >
-                <div className="">
-                  <p className="font-medium">
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {n.name} ({n.type})
                   </p>
-                  <p className="text-sm text-gray-600">{n.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {n.description}
+                  </p>
                 </div>
+
                 <div className="flex gap-2">
-                  {/* edit nominee */}
+                  {/* Edit */}
                   <Button
                     variant="outline"
                     size="sm"
@@ -162,21 +184,28 @@ export default function NomineeModal({
                       setSetselectedType(isOpen ? "" : n.type);
                       setNomineeId(isOpen ? "" : n.id);
                       setNewDescription(isOpen ? "" : n.description);
-                      setEditOpen(isOpen ? false : true);
+                      setEditOpen(!isOpen);
                     }}
-                    className="hover:cursor-pointer bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+                    className="
+                  bg-white dark:bg-gray-700 
+                  text-gray-900 dark:text-gray-100
+                  border border-slate-300 dark:border-gray-700
+                  hover:bg-slate-200 dark:hover:bg-gray-600
+                "
                   >
                     Edit
                   </Button>
 
-                  {/* remove nominee */}
+                  {/* Delete */}
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => {
-                      handleDeleteNominee(n.id);
-                    }}
+                    onClick={() => handleDeleteNominee(n.id)}
                     disabled={deleteLoading}
+                    className="
+                  bg-red-600 hover:bg-red-700 
+                  text-white dark:text-gray-100
+                "
                   >
                     Delete
                   </Button>
@@ -185,8 +214,8 @@ export default function NomineeModal({
             ))}
           </div>
 
-          {/* Add new nominee section */}
-          <div className="border-t pt-2">
+          {/* Add new nominee */}
+          <div className="border-t border-slate-300 dark:border-gray-700 pt-3">
             <p className="font-medium mb-1">Add New Nominee</p>
 
             {/* Select nominee from shareholders */}
@@ -194,13 +223,17 @@ export default function NomineeModal({
               value={selectedShareholder}
               onValueChange={setSelectedShareholder}
             >
-              <SelectTrigger className="w-full mt-1">
-                <SelectValue
-                  placeholder="Select Shareholder"
-                  className="placeholder:text-neutral-100"
-                />
+              <SelectTrigger
+                className="
+              w-full mt-1 
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
+              >
+                <SelectValue placeholder="Select Shareholder" />
               </SelectTrigger>
-              <SelectContent className="">
+
+              <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                 {shareholders.map((s) => (
                   <SelectItem
                     key={s.id}
@@ -215,31 +248,59 @@ export default function NomineeModal({
 
             {/* Select Type of Nominee */}
             <Select value={selectedType} onValueChange={setSetselectedType}>
-              <SelectTrigger className="w-full mt-1">
+              <SelectTrigger
+                className="
+              w-full mt-2
+              bg-white dark:bg-gray-800
+              border border-slate-300 dark:border-gray-700
+            "
+              >
                 <SelectValue placeholder="Select Type" />
               </SelectTrigger>
-              <SelectContent className="">
+
+              <SelectContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                 <SelectItem value="first">Type-1</SelectItem>
                 <SelectItem value="second">Type-2</SelectItem>
               </SelectContent>
             </Select>
 
-            {/* Nominee Description (Optional) */}
+            {/* Description */}
             <Input
               placeholder="Description (optional)"
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
-              className="mt-2"
+              className="
+            mt-2 
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
         </div>
 
-        <DialogFooter className="mt-4 flex justify-end items-center">
-          <Button variant="outline" onClick={onClose} className="bg-gray-700">
+        {/* FOOTER */}
+        <DialogFooter className="mt-4 flex justify-end space-x-2">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="
+          bg-white dark:bg-gray-700 
+          text-gray-900 dark:text-gray-100
+          border border-slate-300 dark:border-gray-700
+        "
+          >
             Close
           </Button>
+
           <Button
-            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+            className="
+          flex items-center gap-2 
+          bg-transparent 
+          border border-cyan-400 
+          text-cyan-500 
+          hover:bg-cyan-400 hover:text-gray-900
+          dark:text-cyan-300 dark:hover:text-gray-900
+        "
             onClick={handleAdd}
             disabled={loading}
           >
@@ -265,6 +326,7 @@ export default function NomineeModal({
                 ></path>
               </svg>
             )}
+
             {editOpen
               ? "Update Nominee"
               : loading

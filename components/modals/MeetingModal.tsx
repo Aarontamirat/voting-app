@@ -122,26 +122,42 @@ export default function MeetingModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
+      <DialogContent
+        className="
+      max-w-lg 
+      bg-gradient-to-br 
+      from-white via-slate-100 to-white 
+      dark:from-gray-700 dark:via-gray-800 dark:to-gray-700
+      text-gray-900 dark:text-gray-100
+      border border-slate-300 dark:border-gray-700
+    "
+      >
         <DialogHeader>
           <DialogTitle>
             {mode === "add" ? "Add New Meeting" : "Edit Meeting"}
           </DialogTitle>
-          <DialogDescription className="text-neutral-400">
+
+          <DialogDescription className="text-gray-600 dark:text-gray-300">
             {mode === "add" ? "Add a new meeting" : "Edit a meeting"}
           </DialogDescription>
         </DialogHeader>
 
+        {/* FORM */}
         <div className="space-y-4 mt-2">
+          {/* TITLE */}
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* DATE */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Date & Time
@@ -150,28 +166,40 @@ export default function MeetingModal({
               type="datetime-local"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* LOCATION */}
           <div>
             <label className="block text-sm font-medium mb-1">Location</label>
             <Input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* QUORUM */}
           <div>
             <label className="block text-sm font-medium mb-1">Quorum</label>
             <Input
               value={quorum}
               onChange={(e) => setQuorum(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* FIRST PASSERS */}
           <div>
             <label
               htmlFor="firstPassersNumber"
@@ -183,10 +211,14 @@ export default function MeetingModal({
               id="firstPassersNumber"
               value={firstPassers}
               onChange={(e) => setFirstPassers(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* SECOND PASSERS */}
           <div>
             <label
               htmlFor="secondPassersNumber"
@@ -198,20 +230,27 @@ export default function MeetingModal({
               id="secondPassersNumber"
               value={secondPassers}
               onChange={(e) => setSecondPassers(e.target.value)}
-              className="bg-gray-800"
+              className="
+            bg-white dark:bg-gray-800 
+            border border-slate-300 dark:border-gray-700
+          "
             />
           </div>
 
+          {/* STATUS (ONLY IN EDIT) */}
           {mode === "edit" && (
             <div>
               <label className="block text-sm font-medium mb-1">Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="border rounded p-1 w-full bg-gray-800"
+                className="
+              border border-slate-300 dark:border-gray-700 
+              rounded p-2 w-full 
+              bg-white dark:bg-gray-800
+            "
               >
                 <option value="DRAFT">DRAFT</option>
-                {/* <option value="OPEN">Open</option> */}
                 <option value="CLOSED">Closed</option>
                 <option value="VOTINGOPEN">Voting Open</option>
               </select>
@@ -219,19 +258,32 @@ export default function MeetingModal({
           )}
         </div>
 
+        {/* FOOTER */}
         <DialogFooter className="mt-4 flex justify-end space-x-2">
           <Button
             variant="outline"
-            className="bg-gray-700"
+            className="
+          bg-white dark:bg-gray-700 
+          text-gray-900 dark:text-gray-100
+          border border-slate-300 dark:border-gray-700
+        "
             onClick={onClose}
             disabled={loading}
           >
             Cancel
           </Button>
+
           <Button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+            className="
+          flex items-center gap-2 
+          bg-transparent 
+          border border-cyan-400 
+          text-cyan-500 
+          hover:bg-cyan-400 hover:text-gray-900
+          dark:text-cyan-300 dark:hover:text-gray-900
+        "
           >
             {loading && (
               <svg
@@ -255,6 +307,7 @@ export default function MeetingModal({
                 ></path>
               </svg>
             )}
+
             {loading ? "Saving..." : "Save"}
           </Button>
         </DialogFooter>

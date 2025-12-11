@@ -51,71 +51,107 @@ export default function VotingCardsPage() {
     );
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen print:bg-white">
+    <div
+      className="
+    p-6 min-h-screen
+    bg-gradient-to-br from-gray-100 to-gray-200 
+    dark:from-gray-900 dark:to-gray-800
+    text-gray-900 dark:text-gray-100
+    print:bg-white
+  "
+    >
+      {/* Header */}
       <div className="flex justify-between items-center mb-6 no-print">
-        <h1 className="text-2xl font-bold">
+        <h1
+          className="
+        text-3xl font-extrabold tracking-tight
+        bg-gradient-to-r from-cyan-500 to-blue-600
+        dark:from-cyan-300 dark:to-blue-400
+        text-transparent bg-clip-text
+      "
+        >
           Voting Cards for {meeting?.title || "Meeting"}
         </h1>
-        <Button className="no-print" onClick={() => window.print()}>
-          🖨️ Print All
+
+        <Button
+          className="
+        no-print font-semibold px-4 py-2
+        bg-gradient-to-r from-violet-600 to-purple-700 text-white
+        hover:from-violet-700 hover:to-purple-800
+        shadow-lg transition
+      "
+          onClick={() => window.print()}
+        >
+          Print All
         </Button>
       </div>
 
       {attendees.length === 0 ? (
-        <p className="text-gray-600">No attendees found for this meeting.</p>
+        <p className="text-gray-600 dark:text-gray-300">
+          No attendees found for this meeting.
+        </p>
       ) : (
         <div
           className="
-            print-area 
-            grid grid-rows-1 md:grid-rows-2 
-            gap-6 
-            print:grid-rows-2 
-            print:gap-4
-          "
+        print-area 
+        grid grid-rows-1 md:grid-rows-2 
+        gap-6 print:gap-4
+      "
         >
-          {attendees.map((voter, index) => (
+          {attendees.map((voter) => (
             <div
               key={voter.id}
               className="
-                bg-white border border-gray-600 shadow-sm rounded-lg p-6 
-                break-inside-avoid
-                print:break-inside-avoid
-              "
+            bg-white/70 dark:bg-gray-800/50
+            border border-gray-300 dark:border-gray-700
+            shadow-lg rounded-xl p-6 
+            backdrop-blur-md
+            break-inside-avoid print:break-inside-avoid
+            transition-all
+          "
             >
               {/* Header */}
-              <div className="flex justify-between mb-1 gap-4">
-                <Image src={Logo} alt="Logo" className="w-40 h-auto" />
-                <div className="">
-                  <div className="flex items-center text-sm gap-4 whitespace-nowrap pr-2">
-                    <p>
-                      <strong>Voter ID:</strong> {voter.id}
+              <div className="flex justify-between mb-3 gap-4">
+                <Image
+                  src={Logo}
+                  alt="Logo"
+                  className="w-36 h-auto opacity-90 dark:opacity-100"
+                />
+
+                <div className="space-y-1 text-sm">
+                  <p>
+                    <strong className="text-cyan-600 dark:text-cyan-300">
+                      Voter ID:
+                    </strong>{" "}
+                    {voter.id}
+                  </p>
+                  <p>
+                    <strong className="text-blue-600 dark:text-blue-300">
+                      Voter Name:
+                    </strong>{" "}
+                    {voter.name}
+                  </p>
+                  <p>
+                    <strong className="text-purple-600 dark:text-purple-300">
+                      Share Value:
+                    </strong>{" "}
+                    {voter.shareValue}
+                  </p>
+
+                  {Number(voter.shareValue) >= Number(totalShares) * 0.02 && (
+                    <p className="text-green-500 font-bold">
+                      [Influential Shareholder]
                     </p>
-                    <p>
-                      <strong>Voter Name:</strong> {voter.name}
-                    </p>
-                    <p>
-                      <strong>Share Value:</strong> {voter.shareValue}
-                    </p>
-                  </div>
-                  <div className="">
-                    <p>
-                      {Number(voter.shareValue) >=
-                        Number(totalShares) * 0.02 && (
-                        <span className="text-sm font-bold text-green-500">
-                          [Influencial Shareholder]
-                        </span>
-                      )}
-                    </p>
-                  </div>
+                  )}
                 </div>
               </div>
 
-              <hr className="my-1 border-gray-300" />
+              <hr className="my-2 border-gray-300 dark:border-gray-700" />
 
               {/* Instructions */}
-              <p className="text-sm mb-3 text-gray-700">
-                <strong>Instructions:</strong> Please select your nominee from
-                the list below by ticking the checkbox.
+              <p className="text-sm mb-4 text-gray-700 dark:text-gray-300">
+                <strong>Instructions:</strong> Select your nominee by ticking
+                the checkbox.
               </p>
 
               {/* Nominee list */}
@@ -124,26 +160,34 @@ export default function VotingCardsPage() {
                   nominees.map((n) => (
                     <div
                       key={n.id}
-                      className="flex items-center justify-between border-b border-gray-400 py-1"
+                      className="
+                    flex items-center justify-between py-1
+                    border-b border-gray-300 dark:border-gray-600
+                    text-sm
+                  "
                     >
-                      <span className="flex-1 text-sm">
+                      <span className="flex-1">
                         {n.name}
                         {Number(n.shareValue) >= Number(totalShares) * 0.02 && (
-                          <span className="ml-2 text-sm font-bold text-green-500">
-                            (Influencial)
+                          <span className="ml-2 text-green-500 font-bold">
+                            (Influential)
                           </span>
                         )}
                       </span>
 
                       <input
                         type="checkbox"
-                        className="w-4 h-4 border-gray-600"
                         readOnly
+                        className="
+                      w-4 h-4
+                      border-gray-600 dark:border-gray-300
+                      rounded-sm
+                    "
                       />
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     No nominees available for this meeting.
                   </p>
                 )}
@@ -151,8 +195,15 @@ export default function VotingCardsPage() {
 
               {/* Signature */}
               <div className="mt-8">
-                <p className="text-sm text-gray-600">Signature of Voter:</p>
-                <div className="border-b border-gray-400 w-64 mt-2"></div>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Signature of Voter:
+                </p>
+                <div
+                  className="
+                border-b border-gray-400 dark:border-gray-600 
+                w-64 mt-3
+              "
+                ></div>
               </div>
             </div>
           ))}

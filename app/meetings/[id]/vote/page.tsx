@@ -200,50 +200,72 @@ export default function VotePage() {
 
   return (
     <div className="max-w-2xl mx-auto py-10">
-      <Card className="shadow-md border bg-white">
+      <Card
+        className="
+    shadow-xl border 
+    bg-white/70 border-gray-300 
+    dark:bg-gray-800/50 dark:border-gray-700 
+    backdrop-blur-md transition-all
+  "
+      >
         <CardHeader>
-          <CardTitle className="text-xl font-semibold">
+          <CardTitle
+            className="
+        text-2xl font-bold 
+        bg-gradient-to-r from-cyan-500 to-blue-600
+        dark:from-cyan-300 dark:to-blue-400
+        text-transparent bg-clip-text
+      "
+          >
             Meeting Title:{" "}
-            <span className="text-neutral-500 italic">{meetingName}</span>
+            <span className="text-neutral-600 dark:text-neutral-400 italic">
+              {meetingName}
+            </span>
           </CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="space-y-6 text-gray-800 dark:text-gray-200">
+          {/* CLOSED MESSAGE */}
           {isClosed ? (
-            <div className="text-center text-red-500 font-semibold">
+            <div
+              className="
+          text-center text-red-600 dark:text-red-400 
+          font-semibold text-lg py-6
+        "
+            >
               Voting is closed.
             </div>
           ) : (
             <div className="space-y-6">
+              {/* VOTER INPUT */}
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Enter Voter ID
                 </label>
-                <div className="flex items-center justify-between space-x-2">
+
+                <div className="flex items-center space-x-2">
                   <Input
                     value={voterId}
                     onChange={(e) => onVoterInput(e.target.value)}
                     placeholder="e.g. LUC-SH-000"
+                    className="
+                bg-white/60 dark:bg-gray-700 
+                border-gray-300 dark:border-gray-600
+                text-gray-800 dark:text-gray-200
+              "
                   />
 
                   {voterEligible === false && (
-                    <p className="text-red-600 text-sm mt-1">
-                      <CircleX />
-                    </p>
+                    <CircleX className="text-red-600 dark:text-red-400" />
                   )}
+
                   {voterEligible === true && (
-                    <p className="text-green-600 text-sm mt-1">
-                      <CircleCheck />
-                    </p>
+                    <CircleCheck className="text-green-600 dark:text-green-400" />
                   )}
-                  {/*{voteWeight !== null && (*/}
-                  {/*  <p className="text-blue-600 text-sm mt-1">*/}
-                  {/*    Voting Weight: <strong>{voteWeight}</strong>*/}
-                  {/*  </p>*/}
-                  {/*)}*/}
                 </div>
               </div>
 
+              {/* NOMINEES */}
               <div ref={nomineesRef}>
                 <h3 className="text-sm font-medium mb-2">
                   Select up to {maxVotes} nominees
@@ -253,28 +275,42 @@ export default function VotePage() {
                   {nominees.map((n) => {
                     const already = previousVotes.includes(n.id);
                     return (
-                      <div key={n.id} className="flex items-center space-x-2">
+                      <div
+                        key={n.id}
+                        className="
+                    flex items-center space-x-2 
+                    bg-white/50 dark:bg-gray-800/50 
+                    border border-gray-200 dark:border-gray-700 
+                    rounded-md p-2
+                  "
+                      >
                         <Checkbox
                           id={n.id}
                           checked={selectedNominees.includes(n.id)}
                           disabled={already || loading || !voterEligible}
                           onCheckedChange={() => toggleNominee(n.id)}
-                          className={`border border-neutral-500 ${
-                            !voterEligible
-                              ? "bg-red-950 border-red-900"
-                              : "bg-neutral-200 data-[state=checked]:text-green-600"
-                          }`}
+                          className={`
+                      border border-neutral-500 
+                      dark:border-neutral-400
+                      ${
+                        !voterEligible
+                          ? "bg-red-950 border-red-900"
+                          : "bg-neutral-200 dark:bg-gray-700 data-[state=checked]:text-green-600"
+                      }
+                    `}
                         />
+
                         <label
                           htmlFor={n.id}
                           className={`text-sm ${
-                            already ? "text-gray-400" : ""
+                            already ? "text-gray-400 dark:text-gray-500" : ""
                           }`}
                         >
-                          {n.name}{" "}
+                          {n.name}
                         </label>
+
                         {already && (
-                          <span className="ml-2 text-green-600">
+                          <span className="ml-2 text-green-600 dark:text-green-400">
                             <CheckCheckIcon className="w-4 h-4" />
                           </span>
                         )}
@@ -284,8 +320,13 @@ export default function VotePage() {
                 </div>
               </div>
 
+              {/* SUBMIT BUTTON */}
               <Button
-                className="w-full"
+                className="
+            w-full 
+            bg-cyan-600 hover:bg-cyan-700 
+            text-white shadow-md
+          "
                 onClick={handleSubmit}
                 disabled={!voterEligible || loading}
               >

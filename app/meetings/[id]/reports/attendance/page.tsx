@@ -147,15 +147,31 @@ export default function AttendanceReport() {
   };
 
   return (
-    <div className="max-w-5xl sm:max-w-6xl md:max-w-7xl 2xl:max-w-8xl mx-auto p-8">
-      <Card className="shadow-md border-none bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
-        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div className="max-w-7xl mx-auto p-8 space-y-6">
+      <Card
+        className="
+      shadow-xl border
+      bg-white/70 dark:bg-gray-800/50
+      border-gray-300 dark:border-gray-700
+      backdrop-blur-md
+      transition-all
+    "
+      >
+        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <CardTitle className="space-y-4">
-            <div className="text-2xl text-blue-400 font-semibold">
+            <div
+              className="
+            text-2xl font-extrabold
+            bg-gradient-to-r from-cyan-500 to-blue-600
+            dark:from-cyan-300 dark:to-blue-400
+            text-transparent bg-clip-text
+          "
+            >
               Shareholders Management
             </div>
+
             {/* Summary Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
               <SummaryCard label="Status" value={meetingStatus} />
               <SummaryCard label="Quorum (%)" value={`${quorumPct}%`} />
               <SummaryCard label="Total Shares" value={totalShares} />
@@ -175,87 +191,74 @@ export default function AttendanceReport() {
               />
             </div>
           </CardTitle>
+
           {/* Generate PDF Button */}
           <Button
             onClick={generatePDF}
-            variant={"outline"}
-            size={"lg"}
-            className="bg-transparent border-violet-500 text-violet-400 hover:bg-violet-800 hover:text-neutral-100 duration-300 transition"
+            variant="outline"
+            size="lg"
+            className="
+          bg-transparent border-violet-500 text-violet-400
+          hover:bg-violet-800 dark:hover:bg-violet-600 hover:text-white dark:hover:text-gray-900
+          font-semibold shadow-md cursor-pointer transition-all duration-300
+        "
             disabled={loading || loadingDownload}
           >
-            {loadingDownload && <Loader2Icon className="animate-spin" />}
+            {loadingDownload && <Loader2Icon className="animate-spin mr-2" />}
             Generate PDF
           </Button>
         </CardHeader>
 
         <CardContent>
           {/* Attendance Table */}
-          <Table className="border-spacing-x-2 border-spacing-y-1 shadow-lg">
-            <TableHeader className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 hover:bg-gray-900">
-              <TableRow className="bg-gray-800 hover:bg-gray-900">
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
-                  Id
-                </TableHead>
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
-                  Shareholder
-                </TableHead>
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
-                  Shares
-                </TableHead>
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
-                  Represented By
-                </TableHead>
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider border-b border-gray-200">
-                  CheckIn Time
-                </TableHead>
+          <Table className="shadow-md border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
+            <TableHeader className="bg-gray-100 dark:bg-gray-900">
+              <TableRow>
+                <TableHead>Id</TableHead>
+                <TableHead>Shareholder</TableHead>
+                <TableHead>Shares</TableHead>
+                <TableHead>Represented By</TableHead>
+                <TableHead>CheckIn Time</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
+
+            <TableBody>
               {loading && (
-                <TableRow className="hover:bg-gray-800">
-                  <TableCell
-                    colSpan={5}
-                    className="text-center bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 p-4 font-bold animate-pulse"
-                  >
+                <TableRow className="bg-white/40 dark:bg-gray-800/40">
+                  <TableCell colSpan={5} className="text-center p-4">
                     <LoaderRotatingLines
                       style={{
                         h: "30",
                         w: "30",
-                        color: "#9cc5f5",
+                        color: "#22d3ee",
                         strokeWidth: 4,
                       }}
                     />
                   </TableCell>
                 </TableRow>
               )}
-              {attendance.length === 0 && loading === false && (
-                <TableRow className="hover:bg-gray-800">
+
+              {!loading && attendance.length === 0 && (
+                <TableRow className="bg-white/40 dark:bg-gray-800/40">
                   <TableCell
                     colSpan={5}
-                    className="text-center bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100 p-4 font-bold "
+                    className="text-center p-4 text-red-500 dark:text-red-400 font-semibold"
                   >
                     No attendance data available
                   </TableCell>
                 </TableRow>
               )}
+
               {attendance.map((a: any) => (
                 <TableRow
                   key={a.id}
-                  className="hover:bg-gray-800 transition duration-150 ease-in-out"
+                  className="bg-white/50 dark:bg-gray-800/50 hover:bg-cyan-50 dark:hover:bg-gray-700/40 transition"
                 >
-                  <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                    {a.shareholderId}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                    {a.shareholderName}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                    {a.shareValue}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                    {a.representedByName ?? "Self"}
-                  </TableCell>
-                  <TableCell className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
+                  <TableCell>{a.shareholderId}</TableCell>
+                  <TableCell>{a.shareholderName}</TableCell>
+                  <TableCell>{a.shareValue}</TableCell>
+                  <TableCell>{a.representedByName ?? "Self"}</TableCell>
+                  <TableCell>
                     {new Date(a.createdAt).toLocaleString()}
                   </TableCell>
                 </TableRow>
@@ -268,6 +271,9 @@ export default function AttendanceReport() {
   );
 }
 
+{
+  /* Updated SummaryCard */
+}
 function SummaryCard({
   label,
   value,
@@ -279,18 +285,21 @@ function SummaryCard({
 }) {
   return (
     <div
-      className={`p-4 rounded-lg shadow ${
-        highlight
-          ? "bg-gray-900 text-green-500 border-l-4 border-green-500"
-          : "bg-gray-900 text-blue-500"
-      }`}
+      className={`
+        p-4 rounded-lg shadow-md
+        bg-white/30 dark:bg-gray-700/40
+        backdrop-blur-sm
+        border-l-4 hover:shadow-cyan-500/50
+        ${
+          highlight
+            ? "border-green-500 text-green-500"
+            : "border-cyan-500 text-cyan-400"
+        }
+        transition-all
+      `}
     >
-      <div className="text-blue-500 text-sm md:text-base lg:text-lg">
-        {label}
-      </div>
-      <div className="text-orange-500 text-sm md:text-base lg:text-lg font-semibold">
-        {value}
-      </div>
+      <div className="text-sm md:text-base font-medium">{label}</div>
+      <div className="text-lg md:text-xl font-bold mt-1">{value}</div>
     </div>
   );
 }

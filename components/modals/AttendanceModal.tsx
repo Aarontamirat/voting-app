@@ -63,7 +63,7 @@ export default function AttendanceModal({
 
   const fetchData = async () => {
     try {
-      const resSh = await fetch("/api/shareholders?take=1000");
+      const resSh = await fetch("/api/shareholders?take=5000");
       const shData = await resSh.json();
       if (!resSh.ok)
         throw new Error(shData.error || "Failed to load shareholders");
@@ -175,17 +175,45 @@ export default function AttendanceModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl sm:max-w-[40vw] max-h-[90vh] flex flex-col bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
-        <DialogHeader className="flex-shrink-0">
-          <DialogTitle>Attendance — {meeting.title}</DialogTitle>
-          <DialogDescription className="text-neutral-200">
+      <DialogContent
+        className="
+      max-w-4xl sm:max-w-[40vw] max-h-[90vh]
+      flex flex-col
+      shadow-2xl border
+      bg-white/70 dark:bg-gray-800/50
+      border-gray-300 dark:border-gray-700
+      backdrop-blur-xl
+      text-gray-800 dark:text-gray-200
+      transition-all
+    "
+      >
+        <DialogHeader className="flex-shrink-0 pb-3 border-b border-gray-300 dark:border-gray-700">
+          <DialogTitle
+            className="
+          text-2xl font-extrabold 
+          bg-gradient-to-r from-cyan-500 to-blue-600
+          dark:from-cyan-300 dark:to-blue-400
+          text-transparent bg-clip-text
+        "
+          >
+            Attendance — {meeting.title}
+          </DialogTitle>
+          <DialogDescription className="text-gray-700 dark:text-gray-300">
             Record attendance here
           </DialogDescription>
         </DialogHeader>
 
-        <div className="overflow-y-auto flex-1 px-1 space-y-4">
+        <div className="overflow-y-auto flex-1 px-1 space-y-4 mt-2">
+          {/* QUORUM BOX */}
           {quorumInfo && (
-            <div className="p-3 rounded text-sm">
+            <div
+              className="
+            p-4 rounded-lg text-sm 
+            bg-white/50 dark:bg-gray-800/50 
+            border border-gray-300 dark:border-gray-700 
+            shadow-sm backdrop-blur
+          "
+            >
               <div>
                 <strong>Total shares:</strong> {quorumInfo.totalShares}
               </div>
@@ -198,9 +226,9 @@ export default function AttendanceModal({
               <div>
                 <strong>Status:</strong>{" "}
                 <span
-                  className={`${
+                  className={
                     quorumInfo.quorumMet ? "text-green-500" : "text-red-500"
-                  }`}
+                  }
                 >
                   {quorumInfo.quorumMet ? "Met" : "Not met"}
                 </span>
@@ -208,104 +236,43 @@ export default function AttendanceModal({
             </div>
           )}
 
-          {/* Shareholders */}
-          <div className="space-y-2">
-            <div className="text-sm font-medium">Search Shareholder by ID</div>
-            <Input
-              placeholder="Enter shareholder ID..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full placeholder:text-stone-400"
-            />
-
-            {searchTerm && (
-              <div className="border rounded p-2 max-h-60 overflow-y-auto">
-                {filteredShareholders.length > 0 ? (
-                  filteredShareholders.map((s) => (
-                    <div
-                      key={s.id}
-                      className="flex justify-between items-center p-2 hover:bg-gray-700 rounded cursor-pointer"
-                    >
-                      <div>
-                        <div className="font-medium text-neutral-100 text-sm">
-                          {s.name}
-                        </div>
-                        <div className="text-xs text-neutral-300">
-                          {s.id} — {s.shareValue} shares
-                        </div>
-                      </div>
-                      <Checkbox
-                        checked={selectedIds.includes(s.id)}
-                        onCheckedChange={() => toggleSelected(s.id)}
-                        className="w-5 h-5 hover:cursor-pointer data-[state=checked]:bg-emerald-500 data-[state=checked]:border-neutral-100"
-                        disabled={loading}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-sm text-gray-300">
-                    No shareholders found.
-                  </div>
-                )}
-              </div>
-            )}
-
-            {selectedIds.length > 0 && (
-              <div className="border-t pt-2">
-                <div className="text-sm font-medium mb-1">
-                  Selected Shareholders:
-                </div>
-                <ul className="text-sm space-y-1">
-                  {shareholders
-                    .filter((s) => selectedIds.includes(s.id))
-                    .map((s) => (
-                      <li key={s.id} className="flex justify-between">
-                        <span>
-                          {s.name} ({s.id})
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-500"
-                          onClick={() => toggleSelected(s.id)}
-                        >
-                          Remove
-                        </Button>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
-          </div>
-
-          {/* Representative */}
-          <div className="space-y-2">
+          {/* REPRESENTATIVE TYPE */}
+          <div className="space-y-2 bg-white/40 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-lg p-3 backdrop-blur">
             <div className="flex flex-wrap items-center gap-3">
               {["none", "existing", "shareholder", "new"].map((type) => (
-                <label key={type} className="flex items-center space-x-2">
+                <label
+                  key={type}
+                  className="flex items-center space-x-2 text-sm cursor-pointer"
+                >
                   <input
                     type="radio"
                     checked={repType === type}
                     onChange={() => setRepType(type as any)}
+                    className="accent-cyan-500"
                   />
-                  <span className="text-sm capitalize">
+                  <span className="capitalize">
                     {type === "none"
                       ? "No representative (attend directly)"
                       : type === "existing"
                       ? "Existing Representative"
                       : type === "shareholder"
-                      ? "Shareholder acting as Representative"
+                      ? "Shareholder Representative"
                       : "New / External Representative"}
                   </span>
                 </label>
               ))}
             </div>
 
+            {/* EXISTING REP */}
             {repType === "existing" && (
               <select
                 value={existingRepId}
                 onChange={(e) => setExistingRepId(e.target.value)}
-                className="w-full border p-2 rounded bg-gray-700"
+                className="
+              w-full p-2 rounded 
+              bg-white/60 dark:bg-gray-700 
+              border border-gray-300 dark:border-gray-600
+            "
               >
                 <option value="">Select representative</option>
                 {representatives.map((r) => (
@@ -317,11 +284,16 @@ export default function AttendanceModal({
               </select>
             )}
 
+            {/* SHAREHOLDER REP */}
             {repType === "shareholder" && (
               <select
                 value={repShareholderId}
                 onChange={(e) => setRepShareholderId(e.target.value)}
-                className="w-full border p-2 rounded bg-gray-700"
+                className="
+              w-full p-2 rounded 
+              bg-white/60 dark:bg-gray-700 
+              border border-gray-300 dark:border-gray-600
+            "
               >
                 <option value="">Select shareholder representative</option>
                 {shareholders.map((s) => (
@@ -332,45 +304,159 @@ export default function AttendanceModal({
               </select>
             )}
 
+            {/* NEW REP */}
             {repType === "new" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <Input
                   placeholder="Representative Full Name"
                   value={newRepName}
                   onChange={(e) => setNewRepName(e.target.value)}
-                  className="placeholder:text-stone-400"
+                  className="bg-white/60 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
                 />
                 <Input
                   placeholder="Representative ID"
                   value={newRepId}
                   onChange={(e) => setNewRepId(e.target.value)}
-                  className="placeholder:text-stone-400"
+                  className="bg-white/60 dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
                 />
               </div>
             )}
           </div>
 
-          {/* Existing Attendees */}
+          {/* SEARCH SHAREHOLDERS */}
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Search Shareholder by ID</div>
+            <Input
+              placeholder="Enter shareholder ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="
+            w-full 
+            bg-white/60 dark:bg-gray-700 
+            border border-gray-300 dark:border-gray-600
+            placeholder:text-gray-500 dark:placeholder:text-gray-400
+          "
+            />
+
+            {searchTerm && (
+              <div
+                className="
+              border border-gray-300 dark:border-gray-700 
+              rounded-lg p-2 
+              max-h-60 overflow-y-auto
+              bg-white/40 dark:bg-gray-800/40 backdrop-blur
+            "
+              >
+                {filteredShareholders.length > 0 ? (
+                  filteredShareholders.map((s) => (
+                    <div
+                      key={s.id}
+                      className="
+                    flex justify-between items-center 
+                    p-2 rounded-md cursor-pointer 
+                    hover:bg-cyan-50 dark:hover:bg-gray-700/50 
+                    transition
+                  "
+                    >
+                      <div>
+                        <div className="font-medium">{s.name}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          {s.id} — {s.shareValue} shares
+                        </div>
+                      </div>
+                      <Checkbox
+                        checked={selectedIds.includes(s.id)}
+                        onCheckedChange={() => toggleSelected(s.id)}
+                        className="
+                      w-5 h-5 cursor-pointer
+                      data-[state=checked]:bg-cyan-500 
+                      data-[state=checked]:border-white
+                    "
+                        disabled={loading}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    No shareholders found.
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SELECTED SHAREHOLDERS */}
+            {selectedIds.length > 0 && (
+              <div className="border-t border-gray-300 dark:border-gray-700 pt-2">
+                <div className="text-sm font-medium mb-1">
+                  Selected Shareholders:
+                </div>
+                <ul className="text-sm space-y-1">
+                  {shareholders
+                    .filter((s) => selectedIds.includes(s.id))
+                    .map((s) => (
+                      <li
+                        key={s.id}
+                        className="flex justify-between items-center"
+                      >
+                        <span>
+                          {s.name} ({s.id})
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-500 hover:bg-transparent"
+                          onClick={() => toggleSelected(s.id)}
+                        >
+                          Remove
+                        </Button>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* EXISTING ATTENDEES */}
           <div>
             <div className="text-sm font-medium mb-1">Existing Attendees</div>
-            <div className="max-h-48 overflow-y-auto border rounded p-2">
+            <div
+              className="
+            max-h-48 overflow-y-auto 
+            border border-gray-300 dark:border-gray-700 
+            rounded-lg p-2
+            bg-white/40 dark:bg-gray-800/40 backdrop-blur
+          "
+            >
               {attendance.length === 0 ? (
-                <div className="text-sm text-gray-500">No attendees yet.</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  No attendees yet.
+                </div>
               ) : (
                 <ul className="space-y-1 text-sm">
                   {attendance.map((a) => (
                     <li
                       key={a.id}
-                      className="flex justify-between items-center px-2 shadow-sm rounded-sm hover:bg-gray-800 hover:cursor-pointer"
+                      className="
+                    flex justify-between items-center 
+                    px-2 py-1 rounded-md
+                    hover:bg-cyan-50 dark:hover:bg-gray-700/50 
+                    transition
+                  "
                     >
                       <div>
                         {a.shareholderName} ({a.shareValue})
                       </div>
-                      <div className="text-neutral-300 flex items-center sm:gap-4">
+
+                      <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                         {a.representedByName ?? "-"}
+
                         <Button
-                          variant={"outline"}
-                          className="w-8 h-8 bg-transparent text-neutral-100 hover:text-red-500 border-none hover:bg-transparent hover:cursor-pointer duration-300 transition"
+                          variant="outline"
+                          className="
+                        w-8 h-8 bg-transparent text-red-400 
+                        hover:text-red-600 dark:hover:text-red-400 
+                        border-none hover:bg-transparent 
+                      "
                           onClick={() => handleDelete(a.id)}
                           disabled={loading}
                         >
@@ -385,19 +471,35 @@ export default function AttendanceModal({
           </div>
         </div>
 
-        <div className="flex justify-end space-x-2 pt-4 border-t flex-shrink-0">
+        {/* FOOTER BUTTONS */}
+        <div
+          className="
+        flex justify-end gap-2 pt-4 
+        border-t border-gray-300 dark:border-gray-700 
+        flex-shrink-0
+      "
+        >
           <Button
             variant="outline"
-            className="bg-gray-700"
+            className="
+          bg-white/50 dark:bg-gray-700 
+          border border-gray-300 dark:border-gray-600
+        "
             onClick={onClose}
             disabled={loading}
           >
             Close
           </Button>
+
           <Button
             onClick={handleAdd}
             disabled={loading}
-            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+            className="
+          flex items-center gap-2
+          bg-transparent border border-cyan-400 text-cyan-500 
+          hover:bg-cyan-400 hover:text-gray-900
+          transition
+        "
           >
             {loading && (
               <svg
@@ -413,7 +515,7 @@ export default function AttendanceModal({
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"
-                ></circle>
+                />
                 <path
                   className="opacity-75"
                   fill="currentColor"

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react"; // lightweight icons
 import { Button } from "../ui/button";
 import { Bungee_Spice } from "next/font/google";
+import { ThemeToggle } from "../general/theme-toggle";
 
 const bungeeSpice = Bungee_Spice({
   weight: ["400"],
@@ -18,25 +19,25 @@ export const Navbar = () => {
   const [selectedTab, setSelectedTab] = useState("");
 
   return (
-    <nav className="sticky top-0 z-50 bg-gray-900 shadow-gray-700 shadow-md">
-      <div className="max-w-7xl mx-auto pr-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 bg-gray-100 dark:bg-gray-900 dark:shadow-gray-700 shadow-gray-300 dark:text-neutral-100 text-gray-900 shadow-md">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* --- Left Section: Logo & Title --- */}
           <div className="flex items-center">
             <Link
               href="/"
-              className="flex items-center"
+              className="flex items-center justify-between gap-2"
               onClick={() => {
                 setSelectedTab("logoIcon");
               }}
             >
               <Image
                 src="/logo.svg"
-                width={150}
-                height={150}
+                width={70}
+                height={70}
                 alt="Logo"
                 priority
-                className="w-40 h-auto"
+                className="w-18 h-auto"
               />
               <span
                 className={`text-xl font-semibold text-neutral-100 ${bungeeSpice.className}`}
@@ -58,17 +59,16 @@ export const Navbar = () => {
               }}
               className={`${
                 selectedTab === "shareholders"
-                  ? "bg-gray-800"
-                  : "hover:bg-gray-800"
+                  ? "dark:bg-gray-800 bg-gray-300"
+                  : "dark:hover:bg-gray-800 hover:bg-gray-300"
               } rounded-md duration-300 transition-colors`}
             >
               <Button
                 variant="link"
                 size={"default"}
                 className={`${
-                  selectedTab === "shareholders"
-                    ? "text-blue-300"
-                    : "text-neutral-100"
+                  selectedTab === "shareholders" &&
+                  "dark:text-blue-300 text-blue-800"
                 } text-base hover:no-underline`}
               >
                 Shareholders
@@ -80,16 +80,17 @@ export const Navbar = () => {
                 setSelectedTab("meetings");
               }}
               className={`${
-                selectedTab === "meetings" ? "bg-gray-800" : "hover:bg-gray-800"
+                selectedTab === "meetings"
+                  ? "dark:bg-gray-800 bg-gray-300"
+                  : "dark:hover:bg-gray-800 hover:bg-gray-300"
               } rounded-md duration-300 transition-colors`}
             >
               <Button
                 variant="link"
                 size={"default"}
                 className={`${
-                  selectedTab === "meetings"
-                    ? "text-blue-300"
-                    : "text-neutral-100"
+                  selectedTab === "meetings" &&
+                  "dark:text-blue-300 text-blue-800"
                 } text-base hover:no-underline`}
               >
                 Meetings
@@ -107,12 +108,17 @@ export const Navbar = () => {
             </Link>
           </div> */}
 
+          {/* --- Right: Login Button (only visible on mobile) --- */}
+          <div className="md:flex">
+            <ThemeToggle />
+          </div>
+
           {/* --- Mobile Hamburger --- */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
-              className="text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
+              className="text-gray-900 dark:text-gray-200 transition"
             >
               {isOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -126,14 +132,10 @@ export const Navbar = () => {
           isOpen ? "max-h-60" : "max-h-0"
         }`}
       >
-        <div className=" mt-4 flex flex-col space-y-1 bg-gray-900 shadow-gray-700 shadow-md">
+        <div className="text-center mt-4 flex flex-col space-y-1 bg-gray-100 text-gray-900 dark:text-neutral-100 dark:bg-gray-800 shadow-gray-700 shadow-md">
           <Link
             href="/shareholders"
-            className={`${
-              selectedTab === "shareholders"
-                ? "bg-gray-800"
-                : "hover:bg-gray-800 bg-gray-800"
-            } md:rounded-md px-2 py-4 duration-300 transition-colors`}
+            className={`dark:bg-gray-700 bg-gray-300 md:rounded-md px-2 py-4 duration-300 transition-colors`}
             onClick={() => {
               setIsOpen(false);
               setSelectedTab("shareholders");
@@ -143,9 +145,8 @@ export const Navbar = () => {
               variant="link"
               size={"default"}
               className={`${
-                selectedTab === "shareholders"
-                  ? "text-blue-300"
-                  : "text-neutral-100"
+                selectedTab === "shareholders" &&
+                "dark:text-blue-300 text-blue-800"
               } text-base hover:no-underline`}
             >
               Shareholders
@@ -153,11 +154,7 @@ export const Navbar = () => {
           </Link>
           <Link
             href="/meetings"
-            className={`${
-              selectedTab === "meetings"
-                ? "bg-gray-800"
-                : "hover:bg-gray-800 bg-gray-800"
-            } md:rounded-md px-2 py-4 duration-300 transition-colors`}
+            className={`dark:bg-gray-700 bg-gray-300 md:rounded-md px-2 py-4 duration-300 transition-colors`}
             onClick={() => {
               setIsOpen(false);
               setSelectedTab("meetings");
@@ -167,9 +164,7 @@ export const Navbar = () => {
               variant="link"
               size={"default"}
               className={`${
-                selectedTab === "meetings"
-                  ? "text-blue-300"
-                  : "text-neutral-100"
+                selectedTab === "meetings" && "dark:text-blue-300 text-blue-800"
               } text-base hover:no-underline`}
             >
               Meetings

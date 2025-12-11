@@ -139,7 +139,16 @@ export default function ShareholderModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-gradient-to-br from-gray-600 via-gray-700 to-gray-600 text-gray-100">
+      <DialogContent
+        className="
+      max-w-lg 
+      bg-gradient-to-br 
+      from-white via-slate-100 to-white 
+      dark:from-gray-700 dark:via-gray-800 dark:to-gray-700
+      text-gray-900 dark:text-gray-100
+      border border-slate-300 dark:border-gray-700
+    "
+      >
         <DialogHeader>
           <DialogTitle>
             {mode === "add"
@@ -150,8 +159,9 @@ export default function ShareholderModal({
           </DialogTitle>
         </DialogHeader>
 
+        {/* CONTENT */}
         {mode === "bulk" ? (
-          <div className="space-y-4 mt-2">
+          <div className="space-y-4 mt-3">
             <div>
               <Label
                 htmlFor="bulkImport"
@@ -164,31 +174,44 @@ export default function ShareholderModal({
                 type="file"
                 accept=".xlsx, .xls"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
           </div>
         ) : (
-          <div className="space-y-4 mt-2">
+          <div className="space-y-4 mt-3">
+            {/* ID (Add Only) */}
             {mode === "add" && (
               <div>
                 <label className="block text-sm font-medium mb-1">ID</label>
                 <Input
                   value={id}
                   onChange={(e) => setId(e.target.value)}
-                  className="bg-gray-800"
+                  className="
+                bg-white dark:bg-gray-800 
+                border border-slate-300 dark:border-gray-700
+              "
                 />
               </div>
             )}
 
+            {/* NAME */}
             <div>
               <label className="block text-sm font-medium mb-1">Name</label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="bg-gray-800"
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
 
+            {/* AMHARIC NAME */}
             <div>
               <label className="block text-sm font-medium mb-1">
                 Amharic Name
@@ -196,28 +219,40 @@ export default function ShareholderModal({
               <Input
                 value={nameAm}
                 onChange={(e) => setNameAm(e.target.value)}
-                className="bg-gray-800"
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
 
+            {/* PHONE */}
             <div>
               <label className="block text-sm font-medium mb-1">Phone</label>
               <Input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="bg-gray-800"
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
 
+            {/* ADDRESS */}
             <div>
               <label className="block text-sm font-medium mb-1">Address</label>
               <Input
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="bg-gray-800"
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
 
+            {/* SHARE VALUE */}
             <div>
               <label className="block text-sm font-medium mb-1">
                 Share Value
@@ -225,24 +260,41 @@ export default function ShareholderModal({
               <Input
                 value={shareValue}
                 onChange={(e) => setShareValue(e.target.value)}
-                className="bg-gray-800"
+                className="
+              bg-white dark:bg-gray-800 
+              border border-slate-300 dark:border-gray-700
+            "
               />
             </div>
           </div>
         )}
+
+        {/* FOOTER */}
         <DialogFooter className="mt-4 flex justify-end space-x-2">
           <Button
             variant="outline"
-            className="bg-gray-700"
+            className="
+          bg-white dark:bg-gray-700 
+          text-gray-900 dark:text-gray-100
+          border border-slate-300 dark:border-gray-700
+        "
             onClick={onClose}
             disabled={loading}
           >
             Cancel
           </Button>
+
           <Button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex items-center gap-2 bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
+            className="
+          flex items-center gap-2 
+          bg-transparent 
+          border border-cyan-400 
+          text-cyan-500 
+          hover:bg-cyan-400 hover:text-gray-900
+          dark:text-cyan-300 dark:hover:text-gray-900
+        "
           >
             {loading && (
               <svg
@@ -266,6 +318,7 @@ export default function ShareholderModal({
                 ></path>
               </svg>
             )}
+
             {loading ? "Saving..." : "Save"}
           </Button>
         </DialogFooter>

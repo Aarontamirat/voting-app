@@ -4,40 +4,110 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 flex items-center justify-center p-6">
+    <div
+      className="
+    min-h-screen 
+    flex items-center justify-center p-2 sm:p-6 
+    bg-gradient-to-br 
+    from-gray-100 via-white to-gray-200 
+    dark:from-gray-800 dark:via-gray-900 dark:to-gray-800
+    transition-colors
+  "
+    >
       <div className="max-w-3xl w-full text-center space-y-8">
-        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-600 text-transparent bg-clip-text drop-shadow-lg animate-pulse">
+        {/* Title */}
+        <h1
+          className="
+        text-5xl font-extrabold 
+        bg-gradient-to-r from-cyan-500 to-blue-600 
+        dark:from-cyan-300 dark:to-blue-400 
+        text-transparent bg-clip-text 
+        drop-shadow-lg animate-pulse
+      "
+        >
           Shareholder Voting System
         </h1>
 
-        <p className="text-lg text-gray-300 leading-relaxed">
+        {/* Subtitle */}
+        <p
+          className="
+        text-lg leading-relaxed 
+        text-gray-700 dark:text-gray-300 
+      "
+        >
           Manage meetings, register shareholders, monitor attendance, and
           conduct secure weighted voting — all in one futuristic, seamless
           interface.
         </p>
 
+        {/* Feature Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
-          <div className="bg-gray-800 bg-opacity-50 p-6 rounded-2xl shadow-xl backdrop-blur-md border border-gray-700 hover:border-cyan-500 hover:shadow-cyan-500/30 transition-all">
-            <h3 className="text-xl font-semibold text-cyan-400 mb-2">
+          {/* Card */}
+          <div
+            className="
+          p-6 rounded-2xl shadow-xl 
+          backdrop-blur-md border 
+          transition-all
+          bg-white/60 border-gray-300 
+          hover:border-cyan-400 hover:shadow-cyan-500/30
+          dark:bg-gray-800/50 dark:border-gray-700
+        "
+          >
+            <h3
+              className="
+            text-xl font-semibold 
+            text-cyan-600 dark:text-cyan-400 mb-2
+          "
+            >
               Meetings
             </h3>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               Create, manage, and monitor shareholder meetings in real-time.
             </p>
           </div>
 
-          <div className="bg-gray-800 bg-opacity-50 p-6 rounded-2xl shadow-xl backdrop-blur-md border border-gray-700 hover:border-cyan-500 hover:shadow-cyan-500/30 transition-all">
-            <h3 className="text-xl font-semibold text-cyan-400 mb-2">Voting</h3>
-            <p className="text-gray-400 text-sm">
+          <div
+            className="
+          p-6 rounded-2xl shadow-xl 
+          backdrop-blur-md border 
+          transition-all
+          bg-white/60 border-gray-300 
+          hover:border-cyan-400 hover:shadow-cyan-500/30
+          dark:bg-gray-800/50 dark:border-gray-700
+        "
+          >
+            <h3
+              className="
+            text-xl font-semibold 
+            text-cyan-600 dark:text-cyan-400 mb-2
+          "
+            >
+              Voting
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               Weighted voting system that ensures transparency and fairness.
             </p>
           </div>
 
-          <div className="bg-gray-800 bg-opacity-50 p-6 rounded-2xl shadow-xl backdrop-blur-md border border-gray-700 hover:border-cyan-500 hover:shadow-cyan-500/30 transition-all">
-            <h3 className="text-xl font-semibold text-cyan-400 mb-2">
+          <div
+            className="
+          p-6 rounded-2xl shadow-xl 
+          backdrop-blur-md border 
+          transition-all
+          bg-white/60 border-gray-300 
+          hover:border-cyan-400 hover:shadow-cyan-500/30
+          dark:bg-gray-800/50 dark:border-gray-700
+        "
+          >
+            <h3
+              className="
+            text-xl font-semibold 
+            text-cyan-600 dark:text-cyan-400 mb-2
+          "
+            >
               Reports
             </h3>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               Generate detailed reports for meetings, votes, and attendance.
             </p>
           </div>
@@ -48,12 +118,17 @@ export default function Home() {
             href="https://github.com/Aarontamirat"
             target="_blank"
             rel="noreferrer"
-            className="p-3 rounded-full bg-gray-800 border border-gray-700 hover:border-cyan-400 hover:shadow-cyan-500/40 transition-all"
+            className="p-3 rounded-full
+          border shadow-md 
+          bg-white/60 border-gray-300 
+          hover:border-cyan-400 
+          hover:shadow-cyan-500/40
+          dark:bg-gray-800/50 dark:border-gray-700 transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-cyan-400"
-              fill="none"
+              className="h-8 w-8 text-cyan-600 dark:text-cyan-400"
+              fill="currentColor"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
@@ -70,12 +145,17 @@ export default function Home() {
             href="https://linkedin.com/in/Aarontamirat"
             target="_blank"
             rel="noreferrer"
-            className="p-3 rounded-full bg-gray-800 border border-gray-700 hover:border-cyan-400 hover:shadow-cyan-500/40 transition-all"
+            className="p-3 rounded-full
+          border shadow-md 
+          bg-white/60 border-gray-300 
+          hover:border-cyan-400 
+          hover:shadow-cyan-500/40
+          dark:bg-gray-800/50 dark:border-gray-700 transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-cyan-400"
-              fill="none"
+              className="h-8 w-8 text-cyan-600 dark:text-cyan-400"
+              fill="currentColor"
               viewBox="0 0 24 24"
               stroke="currentColor"
             >

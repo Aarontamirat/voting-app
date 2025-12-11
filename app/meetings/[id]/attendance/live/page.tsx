@@ -8,6 +8,8 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Loader from "@/components/general/Loader";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/general/theme-toggle";
+import Image from "next/image";
 
 export default function LiveAttendancePage() {
   const { id } = useParams();
@@ -49,10 +51,8 @@ export default function LiveAttendancePage() {
           );
 
           if (newOnes.length > 0) {
-            // add them to newArrivals
             setNewArrivals((prev) => [...prev, ...newOnes]);
 
-            // remove them after 4 seconds
             setTimeout(() => {
               setNewArrivals((prev) =>
                 prev.filter((x) => !newOnes.includes(x))
@@ -96,169 +96,176 @@ export default function LiveAttendancePage() {
   const { totalShares, attendedShares, attendance, quorumPct, quorumMet } =
     data;
   const attendedCount = attendance.length;
-  // const quorumTarget = (totalShares * quorumPct) / 100;
   const progressPct = Math.min((attendedShares / totalShares) * 100, 100);
-  const gaugeColor = quorumMet ? "#00b84d" : "#0094ff";
+
+  const gaugeColor = quorumMet
+    ? "#02a337" // green-400
+    : "#0d45ff"; // blue-400
 
   return (
     <div
       ref={containerRef}
-      className={`min-h-screen bg-gradient-to-r from-gray-800 ${
-        quorumMet ? "via-[#011604]" : "via-gray-950 "
-      } to-gray-800 text-blue-900 py-8 px-6`}
+      className="
+        min-h-screen 
+        bg-white
+        dark:bg-gradient-to-r
+        text-gray-900
+        dark:from-gray-900 dark:via-black dark:to-gray-900 
+        dark:text-gray-100
+        relative
+        py-8 px-6
+      "
     >
-      {/* 🔳 BACKGROUND IMAGE */}
+      {/* Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 pointer-events-none"
-        style={{ backgroundImage: "url('/bg-live.png')" }}
+        className="
+          absolute inset-0 
+          bg-cover bg-center bg-no-repeat 
+          opacity-15 dark:opacity-10 
+          pointer-events-none
+        "
+        // style={{ backgroundImage: "url('/bg-live.png')" }}/
       />
 
-      {/* 🔳 DARK OVERLAY TO MAKE IT DIM */}
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+      {/* Dark Overlay (soft) */}
+      <div className="absolute inset-0 bg-white dark:bg-black/50 pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-8xl mx-auto text-center space-y-6"
+        className="max-w-8xl mx-auto text-center space-y-6 relative z-10"
       >
         {/* HEADER */}
-        <div>
-          <div className="">
-            <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-700 to-green-500 bg-clip-text text-transparent drop-shadow-sm">
+        <div className="w-full relative flex flex-col items-center md:flex-row md:items-center md:justify-center gap-6 md:gap-28">
+          {/* LOGO LEFT */}
+          <div className="flex items-center justify-center">
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              width={80}
+              height={80}
+              className="w-28 object-contain"
+              priority
+            />
+          </div>
+
+          {/* TITLE + SUBTITLE */}
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-blue-700 to-green-500 bg-clip-text text-transparent text-center">
               የአቴንዳንስ መከታተያ (ቀጥታ)
             </h1>
 
-            <p className="text-neutral-50 mt-6 uppercase tracking-widest text-sm sm:text-base md:text-lg lg:text-xl">
+            <p className="text-gray-700 dark:text-gray-300 mt-4 md:mt-2 uppercase tracking-widest text-sm md:text-lg text-center">
               የአሁን ሰዓት ባለአክሲዮኖች ተሳትፎ ዕይታ
             </p>
           </div>
-          <div className="float-right">
-            <div className="lg:flex gap-2">
-              <Button
-                onClick={toggleFullScreen}
-                aria-pressed={isFullScreen}
-                className="bg-transparent backdrop-blur-md border-2 border-blue-900 shadow-xl rounded-2xl text-center hover:shadow-2xl hover:shadow-blue-900/20 transition"
-              >
-                {isFullScreen ? "Esc" : "F"}
-              </Button>
-            </div>
+
+          {/* FULLSCREEN BUTTON */}
+          <div className="flex flex-col items-center gap-2 md:gap-4 md:flex-row">
+            {isFullScreen && <ThemeToggle />}
+            <Button
+              onClick={toggleFullScreen}
+              className="bg-transparent border-2 hover:bg-blue-900 dark:hover:bg-blue-900 border-blue-900 dark:border-blue-400 text-blue-900 dark:text-blue-300 hover:text-blue-100 rounded-2xl shadow-lg px-6"
+            >
+              {isFullScreen ? "Esc" : "F"}
+            </Button>
           </div>
         </div>
 
-        {/* GAUGE SECTION */}
+        {/* GAUGE */}
         <div className="relative flex flex-col items-center justify-center mt-12">
           <motion.div
             className="relative w-72 h-72 md:w-96 md:h-96"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 70 }}
           >
-            {/* Rotating halo glow */}
             <motion.div
               className={`absolute inset-0 rounded-full bg-gradient-to-r ${
                 quorumMet
-                  ? " from-blue-900 via-green-500 to-blue-900"
-                  : "from-green-900 via-blue-500 to-green-900"
-              }  blur-3xl opacity-30`}
+                  ? "from-blue-800 via-green-500 to-blue-800"
+                  : "from-green-800 via-blue-500 to-green-800"
+              } blur-3xl opacity-25 dark:opacity-20`}
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
             />
 
-            {/* Circular Gauge */}
             <CircularProgressbar
-              className="font-mono"
               value={progressPct}
-              text={`${
-                progressPct < 10
-                  ? progressPct.toFixed(2)
-                  : progressPct < 26
-                  ? progressPct.toFixed(1)
-                  : progressPct.toFixed(0)
-              }%`}
+              text={`${progressPct.toFixed(
+                progressPct < 100 ? (progressPct < 34 ? 2 : 1) : 0
+              )}%`}
               styles={buildStyles({
                 textColor: gaugeColor,
                 pathColor: gaugeColor,
-                trailColor: "#c5c7cb",
+                trailColor: "#a1a4ad",
                 textSize: "18px",
-                pathTransitionDuration: 2,
                 strokeLinecap: "butt",
               })}
+              className="font-semibold"
             />
 
-            {/* Center Glow */}
             <motion.div
-              className={`absolute inset-10 rounded-full ${
-                quorumMet ? "bg-green-200/20" : "bg-blue-200/20"
-              } blur-2xl`}
+              className="absolute inset-10 rounded-full bg-blue-300/10 dark:bg-blue-200/10 blur-2xl"
               animate={{ opacity: [0.1, 0.9, 0.1] }}
               transition={{ repeat: Infinity, duration: 3 }}
             />
           </motion.div>
 
-          {/* STATUS TEXT */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className={`mt-10 text-2xl font-semibold ${
-              quorumMet ? "text-green-600" : "text-neutral-100"
+          <p
+            className={`mt-6 text-2xl font-semibold ${
+              quorumMet ? "text-green-700" : "text-gray-700 dark:text-gray-200"
             }`}
           >
             {quorumMet
               ? "Meeting Quorum Reached"
               : "Waiting for more Attendees ..."}
-          </motion.p>
+          </p>
         </div>
 
-        {/* FLOATING WELCOME MESSAGES */}
-        <div className="absolute top-70 left-1/5 -translate-x-1/2 z-50 pointer-events-none">
+        {/* FLOATING WELCOME */}
+        <div className="absolute top-72 left-1/5 -translate-x-1/2 z-50 pointer-events-none">
           <AnimatePresence>
             {newArrivals.map((p) => (
               <motion.div
                 key={p.id}
-                initial={{
-                  opacity: 0,
-                  y: 30,
-                  scale: 0.85,
-                  filter: "blur(5px)",
-                }}
+                initial={{ opacity: 0, y: 30, scale: 0.85 }}
                 animate={{
                   opacity: [0, 1, 1, 0],
                   y: [-10, -60, -120, -200],
-                  x: [0, -10, 10, -5, 0], // little smoke drift
-                  scale: [0.8, 1, 1.05, 1],
-                  filter: ["blur(2px)", "blur(0px)", "blur(0px)", "blur(4px)"],
                 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 4.2, ease: "easeOut" }}
+                transition={{ duration: 4.2 }}
                 className="relative w-fit mx-auto"
               >
-                {/* The animated wavy blob background */}
                 <svg
                   className="absolute inset-0 w-full h-full -z-10"
                   viewBox="0 0 200 80"
-                  preserveAspectRatio="none"
                 >
                   <motion.path
-                    fill="rgba(255,255,255,0.15)"
-                    stroke="rgba(255,255,255,0.25)"
+                    fill="rgba(255,255,255,0.1)"
+                    stroke="rgba(255,255,255,0.3)"
                     strokeWidth="2"
                     animate={{
                       d: [
-                        "M10,20 Q50,0 100,20 T190,20 Q150,60 100,50 T10,20",
-                        "M10,30 Q50,10 100,25 T190,35 Q150,70 100,55 T10,30",
-                        "M10,20 Q50,0 100,20 T190,20 Q150,60 100,50 T10,20",
+                        "M10,20 Q50,0 100,20 T190,20",
+                        "M10,30 Q50,10 100,25 T190,35",
+                        "M10,20 Q50,0 100,20 T190,20",
                       ],
                     }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
+                    transition={{ repeat: Infinity, duration: 4 }}
                   />
                 </svg>
 
-                <div className="px-8 py-4 text-white text-2xl font-bold select-none backdrop-blur-xl">
+                <div
+                  className="
+                  px-8 py-4 
+                  text-2xl font-bold 
+                  text-white 
+                  select-none 
+                  backdrop-blur-xl 
+                  bg-black/40 dark:bg-white/20
+                "
+                >
                   Welcome {p.shareholderName}!
                 </div>
               </motion.div>
@@ -270,31 +277,44 @@ export default function LiveAttendancePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-16"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10"
         >
           {[
             { label: "Total Shares", value: totalShares },
-            { label: "Total Shareholders", value: totalShareholders },
+            { label: "Shareholders", value: totalShareholders },
             { label: "Attendees", value: attendedCount },
-            { label: "Total Attendee Shares", value: attendedShares },
+            { label: "Attendee Shares", value: attendedShares },
           ].map((item, idx) => (
             <motion.div
               key={idx}
               whileHover={{ scale: 1.03 }}
-              className="bg-transparent backdrop-blur-md border-2 border-blue-900 shadow-xl rounded-2xl p-6 text-center hover:shadow-2xl hover:shadow-blue-900/20 transition"
+              className="
+                backdrop-blur-md 
+                border-2 
+                border-blue-900 dark:border-blue-400
+                rounded-2xl p-6 text-center 
+                bg-white/20 dark:bg-black/30 
+                shadow-xl 
+              "
             >
-              <p className="sm:text-sm md:text-lg 2xl:text-2xl uppercase 2xl:tracking-wide font-bold text-blue-400 whitespace-nowrap">
+              <p
+                className="
+                text-blue-600 dark:text-blue-300 text-base md:text-lg lg:text-xl 
+                font-bold uppercase tracking-wide
+              "
+              >
                 {item.label}
               </p>
 
-              <motion.p
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ repeat: Infinity, duration: 2 + idx * 0.3 }}
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono font-bold mt-5 text-neutral-200"
+              <p
+                className="
+                text-4xl md:text-5xl 
+                font-mono font-bold mt-5 
+                text-gray-900 dark:text-gray-100
+              "
               >
                 {item.value.toLocaleString()}
-              </motion.p>
+              </p>
             </motion.div>
           ))}
         </motion.div>
