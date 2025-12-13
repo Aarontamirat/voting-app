@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     // Example mapping (adjust column names to match your Excel headers)
     const shareholdersData = rows.map((row: any) => ({
-      id: row["Id"],
+      id: String(row["Id"]),
       name: row["Name"],
       nameAm: row["Name Am"],
       phone: row["Phone"] ?? null,
@@ -42,6 +42,18 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
+
+      // force convert id to string
+      shareholdersData.map((s) => (s.id = String(s.id)));
+
+      // validate if id is not a number
+      if (isNaN(Number(shareholder.id))) {
+        return NextResponse.json(
+          { error: "Shareholder ID must be a number" },
+          { status: 400 }
+        );
+      }
+
       //   validate share value is a number
       if (isNaN(shareholder.shareValue)) {
         return NextResponse.json(

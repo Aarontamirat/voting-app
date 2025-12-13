@@ -24,18 +24,16 @@ datasource db {
 }
 
 model Shareholder {
-  // NOTE: id is manually-entered (string) per your requirement
   id         String   @id
   name       String
   nameAm     String?
   phone      String?
   address    String?
-  shareValue Decimal  @db.Decimal(30, 6) // supports fractional share amounts
+  shareValue Decimal  @db.Decimal(30, 6) 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   attendances   Attendance[]
-  // representations where this shareholder is represented (join table)
   representedIn Representation[]
   shareholderID Representative[]
   nomineeID     Nominee[]
@@ -45,12 +43,11 @@ model Shareholder {
 }
 
 model Meeting {
-  // You said meetings will have their own ids; allow manual string ID
   id            String        @id @default(uuid())
   title         String
   date          DateTime
   location      String?
-  quorumPct     Float? // quorum percent (e.g. 25.0 for 25%)
+  quorumPct     Float? 
   status        MeetingStatus @default(DRAFT)
   firstPassers  Int?
   secondPassers Int?
