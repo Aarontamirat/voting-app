@@ -77,6 +77,7 @@ export async function GET(
       attendance: formatted,
       attendeesCount,
       totalShareholdersCount,
+      required,
     });
   } catch (err: any) {
     return NextResponse.json(

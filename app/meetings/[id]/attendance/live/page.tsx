@@ -93,8 +93,14 @@ export default function LiveAttendancePage() {
 
   if (!data) return <Loader />;
 
-  const { totalShares, attendedShares, attendance, quorumPct, quorumMet } =
-    data;
+  const {
+    totalShares,
+    attendedShares,
+    attendance,
+    quorumPct,
+    quorumMet,
+    required,
+  } = data;
   const attendedCount = attendance.length;
   const progressPct = Math.min((attendedShares / totalShares) * 100, 100);
 
@@ -277,13 +283,14 @@ export default function LiveAttendancePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mt-10"
         >
           {[
             { label: "Total Shares", value: totalShares },
             { label: "Shareholders", value: totalShareholders },
             { label: "Attendees", value: attendedCount },
             { label: "Attendee Shares", value: attendedShares },
+            { label: "Quorum Shares", value: required },
           ].map((item, idx) => (
             <motion.div
               key={idx}
@@ -299,7 +306,7 @@ export default function LiveAttendancePage() {
             >
               <p
                 className="
-                text-blue-600 dark:text-blue-300 text-base md:text-lg lg:text-xl 
+                text-blue-600 dark:text-blue-300 text-base md:text-md lg:text-xl
                 font-bold uppercase tracking-wide
               "
               >
@@ -308,12 +315,12 @@ export default function LiveAttendancePage() {
 
               <p
                 className="
-                text-4xl md:text-5xl 
+                text-3xl lg:text-4xl 2xl:text-5xl 
                 font-mono font-bold mt-5 
                 text-gray-900 dark:text-gray-100
               "
               >
-                {item.value.toLocaleString()}
+                {item.value.toFixed(2)}
               </p>
             </motion.div>
           ))}

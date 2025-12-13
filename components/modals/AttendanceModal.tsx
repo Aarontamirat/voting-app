@@ -50,11 +50,14 @@ export default function AttendanceModal({
   const [quorumInfo, setQuorumInfo] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredShareholders = shareholders.filter(
-    (s) =>
-      s.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredShareholders = shareholders
+    .map((s, i) => ({ ...s, originalIndex: i }))
+    .filter(
+      (s) =>
+        s.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
 
   useEffect(() => {
     if (!meeting || !isOpen) return;
