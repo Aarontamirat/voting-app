@@ -29,6 +29,7 @@ export default function AttendanceReport() {
     attendance: [],
     attendeesCount: 0,
     totalShareholdersCount: 0,
+    required: 0,
   });
 
   const { id } = useParams();
@@ -60,6 +61,7 @@ export default function AttendanceReport() {
     attendance,
     attendeesCount,
     totalShareholdersCount,
+    required,
   } = data;
 
   // inside your component
@@ -116,6 +118,8 @@ export default function AttendanceReport() {
       metaY += 6;
       doc.text(`Attended Shares: ${attendedShares}`, 14, metaY);
       doc.text(`Attended Shareholders: ${attendeesCount}`, x, metaY);
+      metaY += 6;
+      doc.text(`Expected Shares: ${required}`, x, metaY);
 
       // build table from attendance and insert using autoTable
       const tableStartY = metaY + 8;
@@ -184,6 +188,7 @@ export default function AttendanceReport() {
                 label="Attended Shareholders"
                 value={attendeesCount}
               />
+              <SummaryCard label="Expected Shares" value={required} />
               <SummaryCard
                 label="Quorum Met"
                 value={quorumMet ? "Yes" : "No"}

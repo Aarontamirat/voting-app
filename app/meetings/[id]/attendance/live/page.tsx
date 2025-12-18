@@ -320,7 +320,10 @@ export default function LiveAttendancePage() {
                 text-gray-900 dark:text-gray-100
               "
               >
-                {item.value.toFixed(2)}
+                {/* {item.value.toFixed(2)} */}
+                {item.label === "Quorum Shares"
+                  ? item.value.toFixed(2)
+                  : item.value}
               </p>
             </motion.div>
           ))}
