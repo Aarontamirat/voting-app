@@ -40,7 +40,7 @@ export async function GET(req: Request) {
         where,
         skip,
         take,
-        orderBy: { id: "asc" },
+        orderBy: { name: "asc" },
       }),
       prisma.shareholder.aggregate({ _sum: { shareValue: true } }),
     ]);
