@@ -3,7 +3,11 @@ import { motion } from "framer-motion";
 
 const Loader = () => {
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 text-neutral-100">
+    <div
+      className="h-screen flex flex-col items-center justify-center bg-gradient-to-br 
+    from-gray-100 via-white to-gray-200 
+    dark:from-gray-800 dark:via-gray-900 dark:to-gray-800"
+    >
       <div className="relative w-28 h-28">
         <motion.div
           className="absolute inset-0 rounded-full border-4 border-blue-300/50"
