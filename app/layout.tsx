@@ -34,6 +34,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           value={{ light: "light", dark: "dark" }}
+          enableSystem
         >
           <Navbar />
           {children}

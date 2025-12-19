@@ -2,23 +2,31 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence, hover } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!mounted) return null;
 
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="Toggle Theme"
-      className="relative w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-full dark:bg-transparent bg-gray-800 border dark:border-amber-300/40 dark:hover:border-amber-300/70 border-gray-700 hover:border-gray-500 shadow-sm hover:shadow-md shadow-gray-600 dark:shadow-amber-300/70 transition-all duration-300"
+      className="relative w-7 h-7 md:w-10 md:h-10 flex items-center justify-center rounded-full
+                 bg-gray-800 dark:bg-transparent
+                 border border-gray-700 dark:border-amber-300/40
+                 hover:border-gray-500 dark:hover:border-amber-300/70
+                 shadow-sm hover:shadow-md shadow-gray-600 dark:shadow-amber-300/70
+                 transition-all duration-300"
     >
       <AnimatePresence mode="wait" initial={false}>
         {isDark ? (
@@ -27,8 +35,8 @@ export function ThemeToggle() {
             initial={{ rotate: -45, opacity: 0, scale: 0.8 }}
             animate={{ rotate: 0, opacity: 1, scale: 1 }}
             exit={{ rotate: 45, opacity: 0, scale: 0.8 }}
-            whileHover={{ rotate: -45, opacity: 1, scale: 1.2 }}
-            transition={{ duration: 0.5 }}
+            whileHover={{ rotate: -45, scale: 1.2 }}
+            transition={{ duration: 0.4 }}
           >
             <Sun
               className="md:w-7 md:h-7 p-1 text-yellow-500"
@@ -41,11 +49,11 @@ export function ThemeToggle() {
             initial={{ rotate: -45, opacity: 0, scale: 0.8 }}
             animate={{ rotate: 0, opacity: 1, scale: 1 }}
             exit={{ rotate: 45, opacity: 0, scale: 0.8 }}
-            whileHover={{ rotate: 30, opacity: 1, scale: 1.1 }}
-            transition={{ duration: 0.5 }}
+            whileHover={{ rotate: 30, scale: 1.1 }}
+            transition={{ duration: 0.4 }}
           >
             <Moon
-              className="md:w-7 md:h-7 p-1 text-neutral-500 hover:text-neutral-300 transition-all"
+              className="md:w-7 md:h-7 p-1 text-neutral-400"
               fill="currentColor"
             />
           </motion.div>
