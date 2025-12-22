@@ -11,7 +11,7 @@ const UpdateMeetingSchema = z.object({
       message: "Invalid date",
     }),
   location: z.string().optional().nullable(),
-  quorumPct: z.number().min(0).max(100).optional(),
+  quorum: z.number().min(1).optional(),
   status: z.enum(["DRAFT", "OPEN", "CLOSED", "VOTINGOPEN"]).optional(),
   firstPassers: z.coerce.number().optional(),
   secondPassers: z.coerce.number().optional(),
@@ -66,7 +66,10 @@ export async function PUT(
   const { id } = await params;
   try {
     const body = await req.json();
-    const parsed = UpdateMeetingSchema.parse(body);
+    const parsed = UpdateMeetingSchema.parse({
+      ...body,
+      quorum: Number(body.quorum),
+    });
 
     const meeting = await prisma.meeting.findUnique({ where: { id } });
     if (!meeting)
@@ -81,14 +84,24 @@ export async function PUT(
         { error: "Cannot edit voting open meeting" },
         { status: 400 }
       );
-    if (parsed.quorumPct !== undefined && parsed.quorumPct > 100)
+    if (parsed.quorum !== undefined && parsed.quorum > 100)
       return NextResponse.json(
         { error: "Quorum must be between 0 and 100" },
         { status: 400 }
       );
-    if (parsed.quorumPct !== undefined && parsed.quorumPct < 0)
+    if (parsed.quorum !== undefined && parsed.quorum < 0)
       return NextResponse.json(
         { error: "Quorum must be between 0 and 100" },
+        { status: 400 }
+      );
+    if (parsed.firstPassers !== undefined && parsed.firstPassers < 0)
+      return NextResponse.json(
+        { error: "First passers must be greater than 0" },
+        { status: 400 }
+      );
+    if (parsed.secondPassers !== undefined && parsed.secondPassers < 0)
+      return NextResponse.json(
+        { error: "Second passers must be greater than 0" },
         { status: 400 }
       );
 
@@ -96,7 +109,7 @@ export async function PUT(
     if (parsed.title !== undefined) data.title = parsed.title;
     if (parsed.date !== undefined) data.date = new Date(parsed.date);
     if (parsed.location !== undefined) data.location = parsed.location;
-    if (parsed.quorumPct !== undefined) data.quorumPct = parsed.quorumPct;
+    if (parsed.quorum !== undefined) data.quorumPct = parsed.quorum;
     if (parsed.status !== undefined) data.status = parsed.status;
     if (parsed.firstPassers !== undefined)
       data.firstPassers = parsed.firstPassers;

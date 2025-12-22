@@ -306,7 +306,7 @@ export default function LiveAttendancePage() {
             >
               <p
                 className="
-                text-blue-600 dark:text-blue-300 text-base md:text-md lg:text-xl
+                text-blue-600 dark:text-blue-300 text-lg md:text-xl lg:text-2xl
                 font-bold uppercase tracking-wide
               "
               >
@@ -315,14 +315,12 @@ export default function LiveAttendancePage() {
 
               <p
                 className="
-                text-3xl lg:text-4xl 2xl:text-5xl 
+                text-2xl lg:text-3xl 2xl:text-4xl 
                 font-mono font-bold mt-5 
                 text-gray-900 dark:text-gray-100
               "
               >
-                {item.label === "Quorum Shares"
-                  ? item.value.toFixed(2)
-                  : item.value}
+                {item.value.toLocaleString()}
               </p>
             </motion.div>
           ))}

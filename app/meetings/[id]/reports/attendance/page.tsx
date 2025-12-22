@@ -85,7 +85,7 @@ export default function AttendanceReport() {
       const doc = new jsPDF();
 
       // Path to the image
-      const logoPath = "/some.png";
+      const logoPath = "/logo.png";
 
       // convert to dataURL
       const logoDataUrl = await getImageDataUrl(logoPath);

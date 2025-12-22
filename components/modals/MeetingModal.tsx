@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface MeetingModalProps {
   isOpen: boolean;
@@ -236,26 +235,6 @@ export default function MeetingModal({
           "
             />
           </div>
-
-          {/* STATUS (ONLY IN EDIT) */}
-          {mode === "edit" && (
-            <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="
-              border border-slate-300 dark:border-gray-700 
-              rounded p-2 w-full 
-              bg-white dark:bg-gray-800
-            "
-              >
-                <option value="DRAFT">DRAFT</option>
-                <option value="CLOSED">Closed</option>
-                <option value="VOTINGOPEN">Voting Open</option>
-              </select>
-            </div>
-          )}
         </div>
 
         {/* FOOTER */}

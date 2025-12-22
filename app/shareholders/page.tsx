@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -209,7 +209,7 @@ export default function ShareholdersPage() {
                 </TableRow>
               )}
 
-              {shareholders.length === 0 && !loading && (
+              {shareholders.length === 0 && loading === false && (
                 <TableRow className="bg-white/40 dark:bg-gray-800/40 backdrop-blur">
                   <TableCell
                     colSpan={10}

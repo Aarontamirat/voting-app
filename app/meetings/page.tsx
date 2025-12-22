@@ -111,6 +111,23 @@ export default function MeetingsPage() {
     }
   };
 
+  const handleVotingOpenMeeting = async (meetingId: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/meetings/${meetingId}/votingopen`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to open voting");
+      toast.success("Voting opened successfully");
+      fetchMeetings();
+      setLoading(false);
+    } catch (err: any) {
+      toast.error(err.message || "Unknown error");
+      setLoading(false);
+    }
+  };
+
   const handleCloseMeeting = async (meetingId: string) => {
     setLoading(true);
     try {
@@ -251,16 +268,18 @@ export default function MeetingsPage() {
                 </TableRow>
               )}
 
-              {meetings.length === 0 && !loading && (
-                <TableRow className="bg-white/40 dark:bg-gray-800/40 backdrop-blur">
-                  <TableCell
-                    colSpan={7}
-                    className="h-24 text-center text-base text-red-600 dark:text-red-400"
-                  >
-                    No meetings found.
-                  </TableCell>
-                </TableRow>
-              )}
+              {meetings.length === 0 &&
+                loading === false &&
+                fetching === false && (
+                  <TableRow className="bg-white/40 dark:bg-gray-800/40 backdrop-blur">
+                    <TableCell
+                      colSpan={7}
+                      className="h-24 text-center text-base text-red-600 dark:text-red-400"
+                    >
+                      No meetings found.
+                    </TableCell>
+                  </TableRow>
+                )}
 
               {meetings.map((m) => (
                 <TableRow
@@ -329,7 +348,7 @@ export default function MeetingsPage() {
                           }}
                           className={meetingMenuStyle}
                         >
-                          Edit
+                          Edit Meeting
                         </DropdownMenuItem>
 
                         {/* Open */}
@@ -338,7 +357,17 @@ export default function MeetingsPage() {
                             onClick={() => handleOpenMeeting(m.id)}
                             className={meetingMenuStyle}
                           >
-                            Open
+                            Open This Meeting
+                          </DropdownMenuItem>
+                        )}
+
+                        {/* VotingOpen */}
+                        {m.status === "OPEN" && (
+                          <DropdownMenuItem
+                            onClick={() => handleVotingOpenMeeting(m.id)}
+                            className={meetingMenuStyle}
+                          >
+                            Open Voting for This Meeting
                           </DropdownMenuItem>
                         )}
 
@@ -348,7 +377,7 @@ export default function MeetingsPage() {
                             onClick={() => handleCloseMeeting(m.id)}
                             className={meetingMenuStyle}
                           >
-                            Close
+                            Close This Meeting
                           </DropdownMenuItem>
                         )}
 
@@ -361,7 +390,7 @@ export default function MeetingsPage() {
                             }}
                             className={meetingMenuStyle}
                           >
-                            Attendance
+                            Add, Edit, Delete Attendance
                           </DropdownMenuItem>
                         )}
 
@@ -386,7 +415,7 @@ export default function MeetingsPage() {
                             }}
                             className={meetingMenuStyle}
                           >
-                            Nominees
+                            Add, Edit, Delete Nominees
                           </DropdownMenuItem>
                         )}
 
@@ -398,7 +427,7 @@ export default function MeetingsPage() {
                             }
                             className={meetingMenuStyle}
                           >
-                            Voting Cards
+                            Printable Voting Cards
                           </DropdownMenuItem>
                         )}
 
@@ -410,7 +439,7 @@ export default function MeetingsPage() {
                             }
                             className={meetingMenuStyle}
                           >
-                            Voting
+                            Vote
                           </DropdownMenuItem>
                         )}
 
@@ -423,7 +452,7 @@ export default function MeetingsPage() {
                             }
                             className={meetingMenuStyle}
                           >
-                            Live Results
+                            Live Voting Results
                           </DropdownMenuItem>
                         )}
 
@@ -433,7 +462,7 @@ export default function MeetingsPage() {
                             onClick={() => handleDeleteMeeting(m.id)}
                             className={`text-red-400 ${meetingMenuStyle}`}
                           >
-                            DELETE
+                            DELETE THIS MEETING
                           </DropdownMenuItem>
                         )}
 
